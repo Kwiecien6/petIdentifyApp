@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -47,6 +48,7 @@ public class MainActivity extends Activity
 
     CameraBridgeViewBase mCameraView;
     Button mDealButton;
+    Button mIdentifyButton;
 
 //    缓存相机每帧输入的数据
     private Mat mRgba,mTmp;
@@ -106,8 +108,44 @@ public class MainActivity extends Activity
                 }
             }
         });
+
+        mIdentifyButton = findViewById(R.id.identifyBtn);
+        mIdentifyButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"识别测试",Toast.LENGTH_LONG).show();
+
+                try {
+                    Intent identifyIntent = new Intent(MainActivity.this,IdentifyActivity.class);
+                    startActivity(identifyIntent);
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            Log.d(TAG,"OpenCV library not found!");
+        } else {
+            Log.d(TAG, "OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
+    };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mCameraView != null) {
+            mCameraView.disableView();
+        }
+    };
 
     @Override
     public void onCameraViewStarted(int width, int height) {
@@ -249,18 +287,6 @@ public class MainActivity extends Activity
         //返回处理后的结果数据
         return mRgba;
     }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG,"OpenCV library not found!");
-        } else {
-            Log.d(TAG, "OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-        }
-    };
 
 
 }

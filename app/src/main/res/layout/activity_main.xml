@@ -24,6 +24,13 @@
             android:layout_height="40dp"
             android:layout_marginBottom="20dp"
             android:text="处理"/>
+        <Button
+            android:id="@+id/identifyBtn"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp"
+            android:layout_toRightOf="@id/dealBtn"
+            android:text="识别"/>
     </RelativeLayout>
 
 </FrameLayout>
