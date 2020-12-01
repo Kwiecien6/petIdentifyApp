@@ -1,30 +1,20 @@
-package com.jyq.petidentifyapp;
+package com.jyq.petidentifyapp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.jyq.petidentifyapp.R;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -37,8 +27,11 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.Arrays;
 
+/**
+ *测试文件
+ */
 
-public class MainActivity extends Activity
+public class TestMainActivity extends Activity
         implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     private static final String TAG = null;
@@ -90,7 +83,7 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.test_activity_main);
 
         mCameraView = findViewById(R.id.cameraView);
         mCameraView.setCvCameraViewListener(this);
@@ -116,7 +109,7 @@ public class MainActivity extends Activity
                 Toast.makeText(getApplicationContext(),"识别测试",Toast.LENGTH_LONG).show();
 
                 try {
-                    Intent identifyIntent = new Intent(MainActivity.this,IdentifyActivity.class);
+                    Intent identifyIntent = new Intent(TestMainActivity.this, TestIdentifyActivity.class);
                     startActivity(identifyIntent);
                 }catch (Exception ex){
                     Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();

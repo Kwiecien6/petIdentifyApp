@@ -1,21 +1,16 @@
-package com.jyq.petidentifyapp;
+package com.jyq.petidentifyapp.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
+import com.jyq.petidentifyapp.R;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -30,8 +25,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ *测试文件
+ */
 
-public class IdentifyActivity extends Activity
+public class TestIdentifyActivity extends Activity
         implements CameraBridgeViewBase.CvCameraViewListener{
 
     private static final String TAG = null;
@@ -93,7 +91,7 @@ public class IdentifyActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_identify);
+        setContentView(R.layout.test_activity_identify);
 
         mIdentifyJCView = findViewById(R.id.identifyJCView);
         mIdentifyJCView.setCvCameraViewListener(this);
