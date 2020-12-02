@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     tools:context=".activity.MainActivity">
 
-    <Button
-        android:id="@+id/register"
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@id/menu"
+        android:src="@drawable/sample_pet_pic" />
+
+    <LinearLayout
+        android:id="@+id/menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="100dp"
-        android:text="识别注册" />
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/verify"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="100dp"
-        android:text="身份验证" />
+        <Button
+            android:id="@+id/register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="100dp"
+            android:text="识别注册" />
 
-    <Button
-        android:id="@+id/view_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="100dp"
-        android:text="查看宠物数据" />
+        <Button
+            android:id="@+id/verify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/register"
+            android:layout_marginHorizontal="100dp"
+            android:text="身份验证" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/view_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/verify"
+            android:layout_marginHorizontal="100dp"
+            android:text="查看宠物数据" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jyq.petidentifyapp.R;
@@ -30,7 +31,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout linearLayout;
+        CardView cardView;
         ImageView petFace;
         TextView petName;
         TextView petType;
@@ -39,7 +40,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
 
         private ViewHolder(View itemView) {
             super(itemView);
-            linearLayout = (LinearLayout) itemView;
+            cardView = (CardView) itemView;
             petFace = (ImageView) itemView.findViewById(R.id.petFace);
             petName = (TextView) itemView.findViewById(R.id.petName);
             petType = (TextView) itemView.findViewById(R.id.pet_type);

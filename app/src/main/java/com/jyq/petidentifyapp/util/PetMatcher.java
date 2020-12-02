@@ -20,7 +20,7 @@ public class PetMatcher {
     private static int counter;
     public final int UNFINISHED = -2;
     public final int NO_MATCHER = -1;
-    private final int MAX_COUNTER = 45;
+    private final int MAX_COUNTER = 48;
     private final double MY_SIMILARITY = 0.8;
     private List<String> mPathList;
 

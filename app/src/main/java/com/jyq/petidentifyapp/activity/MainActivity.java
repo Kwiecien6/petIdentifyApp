@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //     初始化数据库
     private void initDatabase() {
         DatabaseHelper helper = new DatabaseHelper(this);
-        if (helper.query().size() == 0) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.sample_pet_pic);
-            String path = helper.saveBitmapToLocal(bitmap);
-            PetInfo pet = new PetInfo("无","无" ,"无", 0, path);
-            helper.insert(pet);
-        }
+//        if (helper.query().size() == 0) {
+//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+//                    R.drawable.sample_pet_pic);
+//            String path = helper.saveBitmapToLocal(bitmap);
+//            PetInfo pet = new PetInfo("无","无" ,"无", 0, path);
+//            helper.insert(pet);
+//        }
         helper.close();
     }
 
@@ -56,47 +56,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         DetectActivity.class);
                 registerIntent.putExtra("flag", DetectActivity.FLAG_REGISTER);
                 startActivity(registerIntent);
-//                requestCameraPermission(new PermissionHelper.RequestListener() {
-//                    @Override
-//                    public void onGranted() {
-//                        Intent intent = new Intent(MainActivity.this,
-//                                DetectActivity.class);
-//                        intent.putExtra("flag", DetectActivity.FLAG_REGISTER);
-//                        startActivityForResult(intent,
-//                                DetectActivity.FLAG_REGISTER);
-//                    }
-//
-//                    @Override
-//                    public void onDenied() {
-//                        ToastUtil.showToast(MainActivity.this, "权限拒绝", 0);
-//                    }
-//                });
                 break;
+
             case R.id.verify:
                 Intent verifyIntent = new Intent(MainActivity.this,
                         DetectActivity.class);
                 verifyIntent.putExtra("flag", DetectActivity.FLAG_VERIFY);
-                startActivityForResult(verifyIntent,
-                        DetectActivity.FLAG_VERIFY);
-//                requestCameraPermission(new PermissionHelper.RequestListener() {
-//                    @Override
-//                    public void onGranted() {
-//                        Intent intent = new Intent(MainActivity.this,
-//                                DetectActivity.class);
-//                        intent.putExtra("flag", DetectActivity.FLAG_VERIFY);
-//                        startActivityForResult(intent,
-//                                DetectActivity.FLAG_VERIFY);
-//                    }
-//
-//                    @Override
-//                    public void onDenied() {
-//                        ToastUtil.showToast(MainActivity.this, "权限拒绝", 0);
-//                    }
-//                });
+                startActivity(verifyIntent);
                 break;
+
             case R.id.view_data:
                 startActivity(new Intent(MainActivity.this, ViewDataActivity.class));
                 break;
+
             default:
                 break;
         }

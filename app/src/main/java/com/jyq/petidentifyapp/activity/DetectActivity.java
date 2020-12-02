@@ -64,51 +64,57 @@ public class DetectActivity extends AppCompatActivity implements CameraBridgeVie
                     if (mDetectedPetFace == null) {
                         mDetectedPetFace = (Bitmap) msg.obj;
                         ToastUtil.showToast(getApplicationContext(), "检测到宠物，开始识别", 0);
-                        int result = matcher.histogramMatch(mDetectedPetFace);
+                        if (petList.size() == 0) {
+                            intent = new Intent(DetectActivity.this, RegisterActivity.class);
+                            intent.putExtra("PetFace", mDetectedPetFace);
+                            startActivity(intent);
+                            DetectActivity.this.finish();
 
-                        if (result == matcher.UNFINISHED) {
-                            ToastUtil.showToast(getApplicationContext(), "宠物识别中", 0);
-                            mDetectedPetFace = null;
-                        } else if (result == matcher.NO_MATCHER) {
-                            ToastUtil.showToast(getApplicationContext(), "宠物识别成功，开始注册", 0);
-                            try {
+                        } else {
+
+                            int result = matcher.histogramMatch(mDetectedPetFace);
+                            if (result == matcher.UNFINISHED) {
+                                ToastUtil.showToast(getApplicationContext(), "宠物识别中", 0);
+                                mDetectedPetFace = null;
+
+                            } else if (result == matcher.NO_MATCHER) {
+                                ToastUtil.showToast(getApplicationContext(), "宠物识别成功，开始注册", 0);
                                 intent = new Intent(DetectActivity.this, RegisterActivity.class);
                                 intent.putExtra("PetFace", mDetectedPetFace);
                                 startActivity(intent);
                                 DetectActivity.this.finish();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
 
-                        } else {
-                            mDetectedPetFace = null;
-                            ToastUtil.showToast(getApplicationContext(), "宠物已经注册过啦", 0);
+                            } else {
+                                ToastUtil.showToast(getApplicationContext(), "宠物已经注册过啦", 0);
+                                mDetectedPetFace = null;
+
+                            }
                         }
                     }
                     break;
                 case FLAG_VERIFY:
                     if (mDetectedPetFace == null) {
-                        mDetectedPetFace = (Bitmap) msg.obj;
-                        int result = matcher.histogramMatch(mDetectedPetFace);
-                        if (result == matcher.UNFINISHED) {
-                            mDetectedPetFace = null;
-                        } else if (result == matcher.NO_MATCHER) {
-                            intent = new Intent();
-                            setResult(RESULT_CANCELED, intent);
-                            finish();
+                        if (petList.size() == 0) {
+                            ToastUtil.showToast(getApplicationContext(), "宠物未注册，请前往注册", 0);
                         } else {
-                            intent = new Intent();
-                            intent.putExtra("PET_ID", result);
-//                            setResult(RESULT_OK, intent);
-                            finish();
+                            mDetectedPetFace = (Bitmap) msg.obj;
+                            int result = matcher.histogramMatch(mDetectedPetFace);
+                            if (result == matcher.UNFINISHED) {
+                                ToastUtil.showToast(getApplicationContext(), "宠物验证中", 0);
+                                mDetectedPetFace = null;
+                            } else if (result == matcher.NO_MATCHER) {
+                                ToastUtil.showToast(getApplicationContext(), "宠物未注册，请前往注册", 0);
+                                mDetectedPetFace = null;
+                            } else {
+                                ToastUtil.showToast(getApplicationContext(), "宠物身份验证成功", 0);
+
+                            }
                         }
                     }
                     break;
                 default:
                     break;
             }
-
-
         }
     };
 
@@ -167,6 +173,8 @@ public class DetectActivity extends AppCompatActivity implements CameraBridgeVie
         matcher = new PetMatcher(petList);
         helper.close();
 
+        ToastUtil.showToast(getApplicationContext(), "请横屏使用", 0);
+
     }
 
 
@@ -192,7 +200,7 @@ public class DetectActivity extends AppCompatActivity implements CameraBridgeVie
     public void onDestroy() {
         super.onDestroy();
         mOpenCvCameraView.disableView();
-//        mHandler.removeCallbacksAndMessages(null);
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -205,52 +213,6 @@ public class DetectActivity extends AppCompatActivity implements CameraBridgeVie
     public void onCameraViewStopped() {
 
     }
-
-//    @Override
-//    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-//        mRgba = inputFrame.rgba();
-//        mGray = inputFrame.gray();
-//        // 翻转矩阵以适应前置摄像头
-////        Core.flip(mRgba, mRgba, 1);
-////        Core.flip(mGray, mGray, 1);
-//        // 控制检测矩阵区域和大小
-//        Rect rect = new Rect(
-//                new Point(mGray.width() / 2 - 300, mGray.height() / 2 - 300),
-//                new Size(600, 600));
-//        mGray = new Mat(mGray, rect);
-//
-//        if (mAbsolutePetFaceSize == 0) {
-//            int height = mGray.rows();
-//            if (Math.round(height * mRelativePetFaceSize) > 0) {
-//                mAbsolutePetFaceSize = Math.round(height * mRelativePetFaceSize);
-//            }
-//        }
-//        MatOfRect faces = new MatOfRect();
-//        if (mCascadeClassifier != null) {
-//            mCascadeClassifier.detectMultiScale(mGray, faces, 1.1, 2, 2,
-//                    new Size(mAbsolutePetFaceSize, mAbsolutePetFaceSize), new Size());
-//        }
-//        Rect[] facesArray = faces.toArray();
-//        for (int i = 0; i < facesArray.length; i++) {
-//            Point point = new Point(facesArray[i].x + 420, facesArray[i].y + 220);
-//            facesArray[i] = new Rect(point, facesArray[i].size());
-//            if (facesArray[i].height > 400 && facesArray[i].height < 500) {
-//                Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(),
-//                        FACE_RECT_COLOR, 3);
-//                // 获取并利用message传递当前检测的人脸
-//                Mat faceMat = new Mat(mRgba, facesArray[i]);
-//                Imgproc.resize(faceMat, faceMat, new Size(320, 320));
-//                Bitmap bitmap = Bitmap.createBitmap(faceMat.width(),
-//                        faceMat.height(), Bitmap.Config.ARGB_8888);
-//                Utils.matToBitmap(faceMat, bitmap);
-//                Message message = Message.obtain();
-//                message.what = getIntent().getIntExtra("flag", 0);
-//                message.obj = bitmap;
-//                mHandler.sendMessage(message);
-//            }
-//        }
-//        return mRgba;
-//    }
 
 
     @Override
@@ -280,9 +242,9 @@ public class DetectActivity extends AppCompatActivity implements CameraBridgeVie
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
         return inputFrame;
     }
-
 
 }

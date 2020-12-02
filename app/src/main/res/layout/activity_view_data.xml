@@ -7,6 +7,14 @@
     tools:context=".activity.ViewDataActivity">
 
 
+    <ImageView
+        android:id="@+id/nullTipImg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/null_tip"
+        android:visibility="visible"/>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

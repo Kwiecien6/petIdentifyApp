@@ -77,19 +77,26 @@ public class RegisterActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(petName.getText())
                 && !TextUtils.isEmpty(petAge.getText())
                 && !TextUtils.isEmpty(petType.getText())) {
-
-            pet.setPetName(petName.getText().toString());
-            pet.setPetType(petType.getText().toString());
-            pet.setPetAge(Integer.parseInt(petAge.getText().toString()));
             DatabaseHelper dbHelper = new DatabaseHelper(RegisterActivity.this);
-            Bitmap bitmap = getIntent().getParcelableExtra("PetFace");
-            String path = dbHelper.saveBitmapToLocal(bitmap);
-            pet.setPetPicPath(path);
-            Log.d(TAG, "submitUserInfo: " + pet.toString());
-            dbHelper.insert(pet);
-            dbHelper.close();
-            ToastUtil.showToast(RegisterActivity.this, "注册成功", 0);
-            finish();
+
+           //判断是否存在相同昵称
+           if(dbHelper.isExist(petName.getText().toString()))
+           {
+               ToastUtil.showToast(RegisterActivity.this, "昵称已存在", 0);
+           }else{
+               pet.setPetName(petName.getText().toString());
+               pet.setPetType(petType.getText().toString());
+               pet.setPetAge(Integer.parseInt(petAge.getText().toString()));
+               Bitmap bitmap = getIntent().getParcelableExtra("PetFace");
+               String path = dbHelper.saveBitmapToLocal(bitmap);
+               pet.setPetPicPath(path);
+               Log.d(TAG, "submitUserInfo: " + pet.toString());
+               dbHelper.insert(pet);
+               dbHelper.close();
+               ToastUtil.showToast(RegisterActivity.this, "注册成功", 0);
+               finish();
+           }
+
         } else {
             ToastUtil.showToast(RegisterActivity.this, "注册信息不完整，无法注册", 0);
         }

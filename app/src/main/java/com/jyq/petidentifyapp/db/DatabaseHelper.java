@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
     private static final String CREATE_PET_TABLE = "create table pet_data (" +
             "id integer primary key autoincrement, " +
-            "name text, " +
+            "name text unique, " +
             "type text, " +
             "sex text, " +
             "age int, " +
@@ -95,7 +95,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.clear();
     }
 
+    public boolean isExist(String str){
+
+        Cursor cursor = db.rawQuery(
+                "select * from pet_data where name=? ",
+                new String[] { str });
+
+        if(cursor.moveToNext()){
+            return true;
+        }
+        return false;
+    }
+
     public void close() {
         db.close();
     }
+
 }
