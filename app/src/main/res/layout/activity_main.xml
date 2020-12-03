@@ -25,7 +25,9 @@
             android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="100dp"
+            android:layout_marginHorizontal="60dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_drawable"
             android:text="识别注册" />
 
         <Button
@@ -33,7 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/register"
-            android:layout_marginHorizontal="100dp"
+            android:layout_marginHorizontal="60dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/button_drawable"
             android:text="身份验证" />
 
         <Button
@@ -41,7 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/verify"
-            android:layout_marginHorizontal="100dp"
+            android:layout_marginHorizontal="60dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_drawable"
             android:text="查看宠物数据" />
 
     </LinearLayout>

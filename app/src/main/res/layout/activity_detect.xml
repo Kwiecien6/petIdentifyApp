@@ -12,7 +12,17 @@
         android:id="@+id/DetectCameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginRight="90dp"
         opencv:show_fps="true"
         opencv:camera_id="any"/>
+
+    <Button
+        android:id="@+id/detectStartBtn"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:background="@drawable/circle_drawable_unselect"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

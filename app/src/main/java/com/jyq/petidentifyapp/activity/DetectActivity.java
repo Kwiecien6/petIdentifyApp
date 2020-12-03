@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,16 +44,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class DetectActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
+public class DetectActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener {
 
     private static final String TAG = "DetectActivity";
     private static final Scalar FACE_RECT_COLOR = new Scalar(0, 255, 0, 255);
     public final static int FLAG_REGISTER = 1;
     public final static int FLAG_VERIFY = 2;
+    int FLAG_DETECT_START = 0;
     Mat grayscaleImage;
     int absoluteObjSize;
     private CascadeClassifier mCascadeClassifier;
     private CameraBridgeViewBase mOpenCvCameraView;
+    private Button mDetectStartBtn;
     List<PetInfo> petList;
     private Bitmap mDetectedPetFace;
     private PetMatcher matcher;
@@ -168,6 +173,22 @@ public class DetectActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.DetectCameraView);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
+        mDetectStartBtn = findViewById(R.id.detectStartBtn);
+        mDetectStartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (FLAG_DETECT_START == 0) {
+                    FLAG_DETECT_START = 1;
+                    mDetectStartBtn.setBackgroundResource(R.drawable.circle_drawable);
+                    ToastUtil.showToast(getApplicationContext(), "开始检测", 0);
+                } else {
+                    FLAG_DETECT_START = 0;
+                    mDetectStartBtn.setBackgroundResource(R.drawable.circle_drawable_unselect);
+                    ToastUtil.showToast(getApplicationContext(), "暂停检测", 0);
+                }
+            }
+        });
+
         DatabaseHelper helper = new DatabaseHelper(DetectActivity.this);
         petList = helper.query();
         matcher = new PetMatcher(petList);
@@ -217,33 +238,35 @@ public class DetectActivity extends AppCompatActivity implements CameraBridgeVie
 
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
-        Imgproc.cvtColor(inputFrame, grayscaleImage, Imgproc.COLOR_RGBA2RGB);
-        MatOfRect identifyObj = new MatOfRect();
+        if (FLAG_DETECT_START == 1) {
+            Imgproc.cvtColor(inputFrame, grayscaleImage, Imgproc.COLOR_RGBA2RGB);
+            MatOfRect identifyObj = new MatOfRect();
 
-        if (mCascadeClassifier != null) {
-            mCascadeClassifier.detectMultiScale(grayscaleImage, identifyObj, 1.1, 2, 2,
-                    new Size(absoluteObjSize, absoluteObjSize), new Size());
-        }
-
-        Rect[] facesArray = identifyObj.toArray();
-        for (int i = 0; i < facesArray.length; i++) {
-            Imgproc.rectangle(inputFrame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);
-
-            // 获取并利用message传递当前检测的人脸
-            try {
-                Mat faceMat = new Mat(inputFrame, facesArray[i]);
-                Imgproc.resize(faceMat, faceMat, new Size(200, 200));
-                Bitmap bitmap = Bitmap.createBitmap(faceMat.width(), faceMat.height(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(faceMat, bitmap);
-                Message message = Message.obtain();
-                message.what = getIntent().getIntExtra("flag", 0);
-                message.obj = bitmap;
-                mHandler.sendMessage(message);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (mCascadeClassifier != null) {
+                mCascadeClassifier.detectMultiScale(grayscaleImage, identifyObj, 1.1, 2, 2,
+                        new Size(absoluteObjSize, absoluteObjSize), new Size());
             }
 
+            Rect[] facesArray = identifyObj.toArray();
+            for (int i = 0; i < facesArray.length; i++) {
+                Imgproc.rectangle(inputFrame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);
+
+                // 获取并利用message传递当前检测的人脸
+                try {
+                    Mat faceMat = new Mat(inputFrame, facesArray[i]);
+                    Imgproc.resize(faceMat, faceMat, new Size(200, 200));
+                    Bitmap bitmap = Bitmap.createBitmap(faceMat.width(), faceMat.height(), Bitmap.Config.ARGB_8888);
+                    Utils.matToBitmap(faceMat, bitmap);
+                    Message message = Message.obtain();
+                    message.what = getIntent().getIntExtra("flag", 0);
+                    message.obj = bitmap;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
         return inputFrame;
     }
 

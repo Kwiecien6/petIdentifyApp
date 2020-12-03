@@ -91,6 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                String path = dbHelper.saveBitmapToLocal(bitmap);
                pet.setPetPicPath(path);
                Log.d(TAG, "submitUserInfo: " + pet.toString());
+
                dbHelper.insert(pet);
                dbHelper.close();
                ToastUtil.showToast(RegisterActivity.this, "注册成功", 0);
