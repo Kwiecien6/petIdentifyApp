@@ -14,9 +14,13 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.jyq.petidentifyapp.util.DateUtil.dateToStr;
+import static com.jyq.petidentifyapp.util.DateUtil.dateToStrLong;
+import static com.jyq.petidentifyapp.util.DateUtil.strToDate;
+import static com.jyq.petidentifyapp.util.DateUtil.strToDateLong;
+
 /**
- *数据库辅助类
- *
+ * 数据库辅助类
  */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -27,7 +31,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "name text unique, " +
             "type text, " +
             "sex text, " +
-            "age int, " +
+            "birth text, " +
+            "info text, " +
+            "registTime text, " +
+            "updateTime text, " +
             "path text)";
     private SQLiteDatabase db;
     private Context mContext;
@@ -75,7 +82,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 pet.setPetName(cursor.getString(cursor.getColumnIndex("name")));
                 pet.setPetType(cursor.getString(cursor.getColumnIndex("type")));
                 pet.setPetSex(cursor.getString(cursor.getColumnIndex("sex")));
-                pet.setPetAge(cursor.getInt(cursor.getColumnIndex("age")));
+                pet.setPetBirth(strToDate(cursor.getString(cursor.getColumnIndex("birth"))));
+                pet.setPetInfo(cursor.getString(cursor.getColumnIndex("info")));
+                pet.setPetRegistTime(strToDateLong(cursor.getString(cursor.getColumnIndex("registTime"))));
+                pet.setPetUpdateTime(strToDateLong(cursor.getString(cursor.getColumnIndex("updateTime"))));
                 pet.setPetPicPath(cursor.getString(cursor.getColumnIndex("path")));
                 petList.add(pet);
             } while (cursor.moveToNext());
@@ -89,19 +99,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("name", petInfo.getPetName());
         values.put("type", petInfo.getPetType());
         values.put("sex", petInfo.getPetSex());
-        values.put("age", petInfo.getPetAge());
+        values.put("birth", dateToStr(petInfo.getPetBirth()));
+        values.put("info", petInfo.getPetInfo());
+        values.put("registTime", dateToStrLong(petInfo.getPetRegistTime()));
+        values.put("updateTime", dateToStrLong(petInfo.getPetUpdateTime()));
         values.put("path", petInfo.getPetPicPath());
         db.insert("pet_data", null, values);
         values.clear();
     }
 
-    public boolean isExist(String str){
+    public boolean isExist(String str) {
 
         Cursor cursor = db.rawQuery(
                 "select * from pet_data where name=? ",
-                new String[] { str });
+                new String[]{str});
 
-        if(cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             return true;
         }
         return false;

@@ -1,10 +1,13 @@
 package com.jyq.petidentifyapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -32,21 +35,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         verifyButton.setOnClickListener(this);
         initDatabase();
 
+
+
     }
 
 
 //     初始化数据库
     private void initDatabase() {
         DatabaseHelper helper = new DatabaseHelper(this);
-//        if (helper.query().size() == 0) {
-//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-//                    R.drawable.sample_pet_pic);
-//            String path = helper.saveBitmapToLocal(bitmap);
-//            PetInfo pet = new PetInfo("无","无" ,"无", 0, path);
-//            helper.insert(pet);
-//        }
         helper.close();
     }
+
+
+
 
     @Override
     public void onClick(View v) {

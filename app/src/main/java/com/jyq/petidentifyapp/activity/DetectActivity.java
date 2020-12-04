@@ -3,6 +3,7 @@ package com.jyq.petidentifyapp.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.jyq.petidentifyapp.R;
 import com.jyq.petidentifyapp.db.DatabaseHelper;
@@ -76,7 +79,6 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                             DetectActivity.this.finish();
 
                         } else {
-
                             int result = matcher.histogramMatch(mDetectedPetFace);
                             if (result == matcher.UNFINISHED) {
                                 ToastUtil.showToast(getApplicationContext(), "宠物识别中", 0);
@@ -165,11 +167,20 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detect);
 
+        //申请相机权限
+        if (ContextCompat.checkSelfPermission(DetectActivity.this,
+                android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+            //判断为没有权限，唤起权限申请询问
+            ActivityCompat.requestPermissions(DetectActivity.this, new String[]{android.Manifest.permission.CAMERA}, 1);
+        }
+
+        //判断已经获取权限后的操作
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.DetectCameraView);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
@@ -195,6 +206,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
         helper.close();
 
         ToastUtil.showToast(getApplicationContext(), "请横屏使用", 0);
+
 
     }
 

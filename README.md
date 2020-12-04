@@ -176,6 +176,7 @@ traincascade训练失败，训练结果xml文件无法识别狗脸，考虑样�
 
 2020.11.29---2020.12.1
 添加软件图标；
+为列表添加卡片式布局；
 暂借opencv自带的人脸模型文件，实现目标物体检测、识别、存储（物体识别与匹配算法准确度较低，待改进。数据目前存储在本地SQLite）
 
 
@@ -188,3 +189,34 @@ traincascade训练失败，训练结果xml文件无法识别狗脸，考虑样�
 识别界面待改进，可增加开始检测按钮，避免以刚摄像头刚启动时传送模糊图像message。
 身份验证成功后信息详情界面未写；
 识别匹配算法待改进；
+
+
+2020.12.3
+按钮美化；
+检测界面添加开始按钮；
+考虑将宠物年龄改为出生年月；
+
+存在问题：
+应用相机权限为询问时，相机无法调用，且未弹出申请权限界面。
+解决方法：未主动申请权限，调用相机前添加判断，唤起申请权限
+//申请相机权限
+if(ContextCompat.checkSelfPermission(DetectActivity.this,
+android.Manifest.permission.CAMERA)==PackageManager.PERMISSION_DENIED){
+//判断为没有权限，唤起权限申请询问
+ActivityCompat.requestPermissions(DetectActivity.this,newString[]{android.Manifest.permission.CAMERA},1);
+}else{
+//判断已经获取权限后的操作
+}
+
+
+2020.12.4
+宠物档案：
+照片、宠物昵称（唯一）、宠物品种、宠物性别、出生日期、介绍、注册时间、更新时间。
+Android Date时间工具类_白鲸-CSDN博客_android date
+注册界面添加日期选择器：点击EditText 弹出日期选择器DatePickerDialog_薛瑄的博客-CSDN博客
+
+宠物档案界面改进：点击弹出详情（使用PopupWindow显示详情，添加显示消失动画效果）
+为RecyclerView的item设置点击事件 - 是可乐呀 - 博客园 (cnblogs.com)
+android开发：给RecyclerView的item添加点击事件_wangxiaojia42121的博客-CSDN博客_recyclerview设置点击事件
+2.6.1 PopupWindow(悬浮框)的基本使用 | 菜鸟教程 (runoob.com)
+用setAnimationStyle来设置popwindow显示消失的动画效果_aiguoguo000的博客-CSDN博客
