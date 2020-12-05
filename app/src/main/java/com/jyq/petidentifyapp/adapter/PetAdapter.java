@@ -53,6 +53,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         ImageView petFace;
+        TextView petID;
         TextView petName;
         TextView petType;
         TextView petSex;
@@ -63,6 +64,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
             super(itemView);
             cardView = (CardView) itemView;
             petFace = (ImageView) itemView.findViewById(R.id.petFace);
+            petID = (TextView) itemView.findViewById(R.id.petID);
             petName = (TextView) itemView.findViewById(R.id.petName);
             petType = (TextView) itemView.findViewById(R.id.petType);
             petSex = (TextView) itemView.findViewById(R.id.petSex);
@@ -99,6 +101,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PetAdapter.ViewHolder holder, int position) {
         final PetInfo pet = pets.get(position);
+        holder.petID.setText("编号: " + pet.getPetID().toString());
         holder.petName.setText("昵称: " + pet.getPetName());
         holder.petType.setText("品种: " + pet.getPetType());
         holder.petSex.setText("性别: " + pet.getPetSex());

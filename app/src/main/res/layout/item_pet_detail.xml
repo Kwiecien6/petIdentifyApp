@@ -25,7 +25,26 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp" />
+                android:layout_marginBottom="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/detailPetName"
+                    android:text="宠物编号: "
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/detailPetID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,7 +74,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:maxLines="1"
                     android:text="宠物品种: "
                     android:textSize="15sp" />
 
@@ -63,6 +81,7 @@
                     android:id="@+id/detailPetType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:textSize="15sp" />
             </LinearLayout>
 
@@ -81,12 +100,15 @@
                     android:id="@+id/detailPetSex"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal">
 
                 <TextView
@@ -99,6 +121,7 @@
                     android:id="@+id/detailPetBirth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="none"
                     android:maxLines="1"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -144,8 +167,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -166,6 +189,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/detailDeleteBtn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -174,6 +198,7 @@
                     android:text="删除宠物" />
 
                 <Button
+                    android:id="@+id/detailUpdateBtn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"

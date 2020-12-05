@@ -10,6 +10,7 @@ import java.util.Date;
 
 
 public class PetInfo {
+    private Integer petID;
     private String petName;
     private String petType;
     private String petSex;
@@ -21,7 +22,23 @@ public class PetInfo {
 
     public PetInfo(){};
 
-    public PetInfo(String petName, String petType, String petSex, Date petBirth, String petInfo, Date petRegistTime, Date petUpdateTime, String petPicPath) {
+    @Override
+    public String toString() {
+        return "PetInfo{" +
+                "petID=" + petID +
+                ", petName='" + petName + '\'' +
+                ", petType='" + petType + '\'' +
+                ", petSex='" + petSex + '\'' +
+                ", petBirth=" + petBirth +
+                ", petInfo='" + petInfo + '\'' +
+                ", petRegistTime=" + petRegistTime +
+                ", petUpdateTime=" + petUpdateTime +
+                ", petPicPath='" + petPicPath + '\'' +
+                '}';
+    }
+
+    public PetInfo(Integer petID, String petName, String petType, String petSex, Date petBirth, String petInfo, Date petRegistTime, Date petUpdateTime, String petPicPath) {
+        this.petID = petID;
         this.petName = petName;
         this.petType = petType;
         this.petSex = petSex;
@@ -32,6 +49,13 @@ public class PetInfo {
         this.petPicPath = petPicPath;
     }
 
+    public Integer getPetID() {
+        return petID;
+    }
+
+    public void setPetID(Integer petID) {
+        this.petID = petID;
+    }
 
     public String getPetName() {
         return petName;
@@ -97,17 +121,4 @@ public class PetInfo {
         this.petUpdateTime = petUpdateTime;
     }
 
-    @Override
-    public String toString() {
-        return "PetInfo{" +
-                "petName='" + petName + '\'' +
-                ", petType='" + petType + '\'' +
-                ", petSex='" + petSex + '\'' +
-                ", petBirth=" + petBirth +
-                ", petInfo='" + petInfo + '\'' +
-                ", petRegistTime=" + petRegistTime +
-                ", petUpdateTime=" + petUpdateTime +
-                ", petPicPath='" + petPicPath + '\'' +
-                '}';
-    }
 }

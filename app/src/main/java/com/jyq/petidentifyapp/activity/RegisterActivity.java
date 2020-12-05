@@ -1,6 +1,5 @@
 package com.jyq.petidentifyapp.activity;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import com.jyq.petidentifyapp.R;
 import com.jyq.petidentifyapp.db.DatabaseHelper;
 import com.jyq.petidentifyapp.db.PetInfo;
 import com.jyq.petidentifyapp.util.ToastUtil;
-import com.jyq.petidentifyapp.util.DateUtil;
 
 import java.util.Calendar;
 
@@ -84,7 +82,6 @@ public class RegisterActivity extends AppCompatActivity {
         petBirth.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                // TODO Auto-generated method stub
                 if(hasFocus){
                     Calendar c = Calendar.getInstance();
                     new DatePickerDialog(RegisterActivity.this, new DatePickerDialog.OnDateSetListener() {
@@ -115,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
             DatabaseHelper dbHelper = new DatabaseHelper(RegisterActivity.this);
 
             //判断是否存在相同昵称
-            if (dbHelper.isExist(petName.getText().toString())) {
+            if (dbHelper.isNameExist(petName.getText().toString())) {
                 ToastUtil.showToast(RegisterActivity.this, "昵称已存在", 0);
             } else {
                 Bitmap bitmap = getIntent().getParcelableExtra("PetFace");

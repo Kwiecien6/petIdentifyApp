@@ -79,6 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToNext()) {
             do {
                 PetInfo pet = new PetInfo();
+                pet.setPetID(cursor.getInt(cursor.getColumnIndex("id")));
                 pet.setPetName(cursor.getString(cursor.getColumnIndex("name")));
                 pet.setPetType(cursor.getString(cursor.getColumnIndex("type")));
                 pet.setPetSex(cursor.getString(cursor.getColumnIndex("sex")));
@@ -108,16 +109,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.clear();
     }
 
-    public boolean isExist(String str) {
-
-        Cursor cursor = db.rawQuery(
-                "select * from pet_data where name=? ",
-                new String[]{str});
+    public boolean isNameExist(String str) {
+        Cursor cursor = db.rawQuery("select * from pet_data where name=? ", new String[]{str});
 
         if (cursor.moveToNext()) {
             return true;
         }
         return false;
+    }
+
+    public void deleteID(Integer id) {
+        db.delete("pet_data", "id=?", new String[]{id.toString()});
+    }
+
+    public void updatePet(PetInfo pet) {
+        ContentValues values = new ContentValues();
+
+        values.put("type",pet.getPetType());
+        values.put("sex",pet.getPetSex());
+        values.put("birth",dateToStr(pet.getPetBirth()));
+        values.put("info",pet.getPetInfo());
+
+        db.update("pet_data", values,"id=?",new String[]{pet.getPetID().toString()});
     }
 
     public void close() {
