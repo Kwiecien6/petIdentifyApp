@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "applicationId": "org.opencv",
+  "variantType": "BASE_APK",
+  "elements": [
+    {
+      "outputType": {
+        "type": "PROCESSED_RES"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 3300,
+        "versionName": "3.3.0",
+        "outputFile": "openCVLibrary330-debug.apk",
+        "fullName": "debug",
+        "baseName": "debug",
+        "dirName": ""
+      },
+      "path": "resources-debug.ap_",
+      "properties": {
+        "packageId": "org.opencv",
+        "split": "",
+        "minSdkVersion": "16"
+      }
+    }
+  ]
+}

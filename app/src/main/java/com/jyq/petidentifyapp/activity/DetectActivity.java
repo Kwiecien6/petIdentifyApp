@@ -113,8 +113,8 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                                 ToastUtil.showToast(getApplicationContext(), "宠物未注册，请前往注册", 0);
                                 mDetectedPetFace = null;
                             } else {
-                                ToastUtil.showToast(getApplicationContext(), "宠物身份验证成功", 0);
-
+                                ToastUtil.showToast(getApplicationContext(), "宠物身份验证成功:"+petList.get(result).getPetName(), 0);
+                                //跳转宠物信息界面
                             }
                         }
                     }
@@ -132,12 +132,12 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                     try {
-                        InputStream is = getResources().openRawResource(R.raw.lbpcascade_frontalface_improved);
+                        InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalcatface);
                         File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
-                        File mCascadeFile = new File(cascadeDir, "lbpcascade_frontalface_improved.xml");
+                        File mCascadeFile = new File(cascadeDir, "haarcascade_frontalcatface.xml");
                         FileOutputStream os = new FileOutputStream(mCascadeFile);
 
-                        byte[] buffer = new byte[4096];
+                        byte[] buffer = new byte[1024000];
                         int bytesRead;
                         while ((bytesRead = is.read(buffer)) != -1) {
                             os.write(buffer, 0, bytesRead);
