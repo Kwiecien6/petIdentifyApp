@@ -189,7 +189,7 @@ public class ViewDataActivity extends Activity {
         detailPetBirth.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     Calendar c = Calendar.getInstance();
                     new DatePickerDialog(ViewDataActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
@@ -205,9 +205,9 @@ public class ViewDataActivity extends Activity {
         detailPetSex.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     String[] list = {"公", "母"};//要填充的数据
-                    showListPopupWindow(list,detailPetSex);
+                    showListPopupWindow(list, detailPetSex);
                 }
             }
         });
@@ -232,7 +232,7 @@ public class ViewDataActivity extends Activity {
     private void showListPopupWindow(final String[] list, final EditText editText) {
         final ListPopupWindow listPopupWindow;
         listPopupWindow = new ListPopupWindow(ViewDataActivity.this);
-        listPopupWindow.setAdapter(new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1, list));//用android内置布局，或设计自己的样式
+        listPopupWindow.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, list));//用android内置布局，或设计自己的样式
         listPopupWindow.setAnchorView(editText);//以哪个控件为基准，在该处以logId为基准
         listPopupWindow.setModal(true);
 

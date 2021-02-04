@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -19,44 +19,35 @@
         android:name="android.hardware.camera.front.autofocus"
         android:required="true" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:roundIcon="@drawable/ic_launcher"
         android:label="宠物识别"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+        android:roundIcon="@drawable/ic_launcher"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.ViewDataActivity" />
-
-        <activity android:name=".activity.DetectActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        <activity android:name=".activity.MatcherActivity"></activity>
+        <activity
+            android:name=".activity.DetectActivity"
             android:configChanges="orientation"
-            android:screenOrientation="landscape">
-        </activity>
-
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
         <activity
             android:name=".activity.TestMainActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="landscape">
-        </activity>
-
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.TestIdentifyActivity"
-            android:screenOrientation="landscape" >
-
-        </activity>
-
-
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

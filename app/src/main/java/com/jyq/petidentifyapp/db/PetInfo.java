@@ -1,6 +1,7 @@
 package com.jyq.petidentifyapp.db;
 
 import com.jyq.petidentifyapp.util.DateUtil;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  */
 
 
-public class PetInfo {
+public class PetInfo implements Serializable {
     private Integer petID;
     private String petName;
     private String petType;

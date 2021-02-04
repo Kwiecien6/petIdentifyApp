@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -115,6 +116,10 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                             } else {
                                 ToastUtil.showToast(getApplicationContext(), "宠物身份验证成功:"+petList.get(result).getPetName(), 0);
                                 //跳转宠物信息界面
+                                intent = new Intent(DetectActivity.this, MatcherActivity.class);
+                                intent.putExtra("matcherPet", petList.get(result));
+                                startActivity(intent);
+                                DetectActivity.this.finish();
                             }
                         }
                     }

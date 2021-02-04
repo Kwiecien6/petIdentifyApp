@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.jyq.petidentifyapp.util.DateUtil.dateToStr;
 import static com.jyq.petidentifyapp.util.DateUtil.dateToStrLong;
+import static com.jyq.petidentifyapp.util.DateUtil.getNowDate;
 import static com.jyq.petidentifyapp.util.DateUtil.strToDate;
 import static com.jyq.petidentifyapp.util.DateUtil.strToDateLong;
 
@@ -129,6 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("sex",pet.getPetSex());
         values.put("birth",dateToStr(pet.getPetBirth()));
         values.put("info",pet.getPetInfo());
+        values.put("updateTime", dateToStrLong(getNowDate()));
 
         db.update("pet_data", values,"id=?",new String[]{pet.getPetID().toString()});
     }

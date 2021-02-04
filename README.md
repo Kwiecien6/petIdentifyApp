@@ -211,7 +211,7 @@ ActivityCompat.requestPermissions(DetectActivity.this,newString[]{android.Manife
 
 2020.12.4
 宠物档案：
-照片、宠物昵称（唯一）、宠物品种、宠物性别、出生日期、介绍、注册时间、更新时间。
+照片、编号（主键）、宠物昵称（唯一）、宠物品种、宠物性别、出生日期、介绍、注册时间、更新时间。
 Android Date时间工具类_白鲸-CSDN博客_android date
 注册界面添加日期选择器：点击EditText 弹出日期选择器DatePickerDialog_薛瑄的博客-CSDN博客
 
@@ -220,3 +220,78 @@ Android Date时间工具类_白鲸-CSDN博客_android date
 android开发：给RecyclerView的item添加点击事件_wangxiaojia42121的博客-CSDN博客_recyclerview设置点击事件
 2.6.1 PopupWindow(悬浮框)的基本使用 | 菜鸟教程 (runoob.com)
 用setAnimationStyle来设置popwindow显示消失的动画效果_aiguoguo000的博客-CSDN博客
+
+
+
+2020.12.5
+实现宠物信息的删改功能
+主要实现代码：
+ public void deleteID(Integer id) {
+        db.delete("pet_data", "id=?", new String[]{id.toString()});
+    }
+
+ public void updatePet(PetInfo pet) {
+        ContentValues values = new ContentValues();
+
+        values.put("type",pet.getPetType());
+        values.put("sex",pet.getPetSex());
+        values.put("birth",dateToStr(pet.getPetBirth()));
+        values.put("info",pet.getPetInfo());
+        values.put("updateTime", dateToStrLong(getNowDate()));
+
+        db.update("pet_data", values,"id=?",new String[]{pet.getPetID().toString()});
+    }
+
+
+
+
+
+
+
+
+
+
+
+2021.01.20
+基于特征点的 SURF 匹配
+要解决旋转缩放后的模板图片再匹配原图的问题，就用到了计算机视觉处理算法中的特征变换匹配算法。其思路是先找到图像中的一些“稳定点”，这些点不会因为视角的改变、光照的变化、噪音的干扰而消失，比如角点、边缘点、暗区域的亮点以及亮区域的暗点。这样如果两幅图中有相同的景物，那么稳定点就会在两幅图像的相同景物上同时出现，这样就能实现匹配。
+OpenCV 中针对特征点匹配问题已经提供了很多算法，包括 FAST 、SIFT 、SURF 、ORB 等，这里不赘述这些算法之间的区别，直接以 SURF 为例，看下 OpenCV 里面如何应用的。
+
+来自 <https://www.jianshu.com/p/13d94f2a8f64?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io> 
+
+
+
+宠物身份验证功能：验证成功后可添加类似的特征点匹配效果图
+
+由上面的特征点匹配的效果来看，匹配的效果还是相当糟糕的，如果我们拿着这样子的匹配结果去实现图像拼接或者物体追踪，效果肯定是极差的。所以我们需要进一步筛选匹配点，来获取优秀的匹配点，这就是所谓的“去粗取精”。这里我们采用了Lowe’s算法来进一步获取优秀匹配点。
+为了排除因为图像遮挡和背景混乱而产生的无匹配关系的关键点，SIFT的作者Lowe提出了比较最近邻距离与次近邻距离的SIFT匹配方式：取一幅图像中的一个SIFT关键点，并找出其与另一幅图像中欧式距离最近的前两个关键点，在这两个关键点中，如果最近的距离除以次近的距离得到的比率ratio少于某个阈值T，则接受这一对匹配点。因为对于错误匹配，由于特征空间的高维性，相似的距离可能有大量其他的错误匹配，从而它的ratio值比较高。显然降低这个比例阈值T，SIFT匹配点数目会减少，但更加稳定，反之亦然。
+Lowe推荐ratio的阈值为0.8，但作者对大量任意存在尺度、旋转和亮度变化的两幅图片进行匹配，结果表明ratio取值在0. 4~0. 6 之间最佳，小于0. 4的很少有匹配点，大于0. 6的则存在大量错误匹配点，所以建议ratio的取值原则如下:
+ratio=0. 4：对于准确度要求高的匹配；
+ratio=0. 6：对于匹配点数目要求比较多的匹配；
+ratio=0. 5：一般情况下。
+
+来自 <https://www.cnblogs.com/skyfsm/p/7401523.html> 
+
+
+
+问题：byte[] buffer=new byte[1024000]; byte[]过小时无法正常读取分类器文件
+
+
+ 
+2021.01.22
+问题代码：
+FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SURF );
+opencv的features2d包中提供了surf,sift和orb等特征点算法，根据测试结果发现在opencv3.0的java版本中存在一些bug，导致surf算法无法使用，会抛出如下异常：
+error: (-5) Specified feature detector type is not supported.
+
+https://blog.csdn.net/woshishui6501/article/details/78869931
+https://stackoverflow.com/questions/30657774/surf-and-sift-algorithms-doesnt-work-in-opencv-3-0-java
+
+
+
+引用其他用户修改完善的SDK
+https://github.com/gloomyfish1998/opencv4android
+
+
+2021.02.04
+添加宠物匹配成功后的信息界面，提供信息修改功能，匹配方法与匹配过程图形化展示待添加与改进
