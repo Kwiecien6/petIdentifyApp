@@ -295,3 +295,20 @@ https://github.com/gloomyfish1998/opencv4android
 
 2021.02.04
 添加宠物匹配成功后的信息界面，提供信息修改功能，匹配方法与匹配过程图形化展示待添加与改进
+
+
+2021.03.06
+实现宠物注册界面ORB特征点绘制
+特征点绘制前，输入的MAT图像类型错误时会导致闪退，通过Imgproc.cvtColor方法进行转换
+https://vimsky.com/examples/detail/java-method-org.opencv.features2d.Features2d.drawKeypoints.html
+
+//ORB特征点检测与绘制
+FeatureDetectordetector=FeatureDetector.create(FeatureDetector.ORB);
+MatOfKeyPointkeyPoints=newMatOfKeyPoint();
+MatpetFaceMat=newMat();
+Utils.bitmapToMat(petFace,petFaceMat);
+Imgproc.cvtColor(petFaceMat,petFaceMat,Imgproc.COLOR_RGBA2RGB);
+detector.detect(petFaceMat,keyPoints);
+Features2d.drawKeypoints(petFaceMat,keyPoints,petFaceMat);
+Imgproc.cvtColor(petFaceMat,petFaceMat,Imgproc.COLOR_RGB2RGBA);
+Utils.matToBitmap(petFaceMat,petFace);

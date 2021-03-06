@@ -9,6 +9,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
+import org.opencv.features2d.FeatureDetector;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
@@ -65,4 +66,37 @@ public class PetMatcher {
             return NO_MATCHER;
         }
     }
+
+
+    public int matchImage(Bitmap bitmap) {
+        if (counter < MAX_COUNTER) {
+            // 初始化待匹配图像
+            Mat tempMat = new Mat();
+            Utils.bitmapToMat(bitmap, tempMat);
+            Imgproc.cvtColor(tempMat, tempMat, Imgcodecs.CV_LOAD_IMAGE_COLOR);
+
+            for (int i = 0; i < mPathList.size(); i++) {
+                String path = mPathList.get(i);
+                Mat petsMat = Imgcodecs.imread(path);
+                Imgproc.resize(petsMat, petsMat, new Size(200, 200));
+                Imgproc.cvtColor(petsMat, petsMat, Imgcodecs.CV_LOAD_IMAGE_COLOR);
+
+
+                double similarity = Imgproc.compareHist(petsMat, tempMat, Imgproc.CV_COMP_CORREL);
+
+                if (similarity >= MY_SIMILARITY) {
+
+                    return i;
+                }
+                if (similarity < MY_SIMILARITY && i == mPathList.size() - 1) {
+
+                    counter++;
+                }
+            }
+            return UNFINISHED;
+        } else {
+            return NO_MATCHER;
+        }
+    }
+
 }

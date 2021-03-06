@@ -268,7 +268,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
             for (int i = 0; i < facesArray.length; i++) {
                 Imgproc.rectangle(inputFrame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);
 
-                // 获取并利用message传递当前检测的人脸
+                // 获取并利用message传递当前检测的脸
                 try {
                     Mat faceMat = new Mat(inputFrame, facesArray[i]);
                     Imgproc.resize(faceMat, faceMat, new Size(200, 200));

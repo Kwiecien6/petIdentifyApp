@@ -20,6 +20,14 @@ import com.jyq.petidentifyapp.db.DatabaseHelper;
 import com.jyq.petidentifyapp.db.PetInfo;
 import com.jyq.petidentifyapp.util.ToastUtil;
 
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfKeyPoint;
+import org.opencv.features2d.FeatureDetector;
+import org.opencv.features2d.Features2d;
+import org.opencv.imgproc.Imgproc;
+
 import java.util.Calendar;
 
 import static com.jyq.petidentifyapp.util.DateUtil.getNowDate;
@@ -37,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText petInfo;
     private Button register;
     private ImageView imageView;
+    private ImageView featuresImageView;
     private PetInfo pet;
 
     @Override
@@ -45,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         imageView = (ImageView) findViewById(R.id.registerImageView);
+        featuresImageView = (ImageView) findViewById(R.id.registerFeaturesImageView);
         petName = (EditText) findViewById(R.id.registerPetNameEdText);
         petType = (EditText) findViewById(R.id.registerPetTypeEdText);
         petSex = (RadioGroup) findViewById(R.id.registerPetSex);
@@ -58,12 +68,26 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void init() {
         pet = new PetInfo();
-
         Bitmap petFace = getIntent().getParcelableExtra("PetFace");
         imageView.setImageBitmap(petFace);
 
-        petSex.check(R.id.registerFemaleRBtn);
-        pet.setPetSex(FEMALE);
+        //ORB特征点检测与绘制
+        FeatureDetector detector = FeatureDetector.create(FeatureDetector.ORB);
+        MatOfKeyPoint keyPoints = new MatOfKeyPoint();
+        Mat petFaceMat = new Mat();
+        Utils.bitmapToMat(petFace, petFaceMat);
+        Imgproc.cvtColor(petFaceMat, petFaceMat, Imgproc.COLOR_RGBA2RGB);
+        detector.detect(petFaceMat, keyPoints);
+        Features2d.drawKeypoints(petFaceMat,keyPoints,petFaceMat);
+        Imgproc.cvtColor(petFaceMat, petFaceMat, Imgproc.COLOR_RGB2RGBA);
+
+        Bitmap featuresPetFace = Bitmap.createBitmap(petFaceMat.width(), petFaceMat.height(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(petFaceMat,featuresPetFace);
+
+        featuresImageView.setImageBitmap(featuresPetFace);
+
+        petSex.check(R.id.registerMaleRBtn);
+        pet.setPetSex(MALE);
         petSex.setOnCheckedChangeListener(
                 new RadioGroup.OnCheckedChangeListener() {
                     @Override
