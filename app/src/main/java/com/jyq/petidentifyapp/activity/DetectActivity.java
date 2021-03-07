@@ -42,6 +42,7 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -118,6 +119,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                                 //跳转宠物信息界面
                                 intent = new Intent(DetectActivity.this, MatcherActivity.class);
                                 intent.putExtra("matcherPet", petList.get(result));
+                                intent.putExtra("petFace2Match", mDetectedPetFace);
                                 startActivity(intent);
                                 DetectActivity.this.finish();
                             }

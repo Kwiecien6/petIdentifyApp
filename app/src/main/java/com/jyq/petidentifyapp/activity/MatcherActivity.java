@@ -3,6 +3,7 @@ package com.jyq.petidentifyapp.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputType;
@@ -21,7 +22,21 @@ import com.jyq.petidentifyapp.db.DatabaseHelper;
 import com.jyq.petidentifyapp.db.PetInfo;
 import com.jyq.petidentifyapp.util.ToastUtil;
 
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.DMatch;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfDMatch;
+import org.opencv.core.MatOfKeyPoint;
+import org.opencv.features2d.DescriptorExtractor;
+import org.opencv.features2d.DescriptorMatcher;
+import org.opencv.features2d.FeatureDetector;
+import org.opencv.features2d.Features2d;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import static com.jyq.petidentifyapp.util.DateUtil.dateToStr;
@@ -37,8 +52,10 @@ public class MatcherActivity extends AppCompatActivity {
         setContentView(R.layout.activity_matcher);
 
         final PetInfo matcherPet = (PetInfo) getIntent().getSerializableExtra("matcherPet");
-        ToastUtil.showToast(getApplicationContext(), "宠物："+ matcherPet.getPetName(), 0);
+        final Bitmap petFace2Match = (Bitmap) getIntent().getParcelableExtra("petFace2Match");
+
         ImageView matcherPetFace = findViewById(R.id.matcherPetFace);
+        ImageView matcherFeaturesPetFace = findViewById(R.id.matcherFeaturesPetFace);
         TextView matcherPetID = findViewById(R.id.matcherPetID);
         TextView matcherPetName = findViewById(R.id.matcherPetName);
         final EditText matcherPetType = findViewById(R.id.matcherPetType);
@@ -50,7 +67,11 @@ public class MatcherActivity extends AppCompatActivity {
         Button matcherUpdateBtn = findViewById(R.id.matcherUpdateBtn);
         Button matcherFunctionBtn = findViewById(R.id.matcherFunctionBtn);
 
-        matcherPetFace.setImageBitmap(BitmapFactory.decodeFile(matcherPet.getPetPicPath()));
+        Bitmap petFaceMatcher = BitmapFactory.decodeFile(matcherPet.getPetPicPath());
+        matcherPetFace.setImageBitmap(petFaceMatcher);
+
+        matcherFeaturesPetFace.setImageBitmap(drawMatches(petFace2Match,petFaceMatcher));
+
         matcherPetID.setText(matcherPet.getPetID().toString());
         matcherPetName.setText(matcherPet.getPetName());
         matcherPetType.setText(matcherPet.getPetType());
@@ -126,5 +147,71 @@ public class MatcherActivity extends AppCompatActivity {
             }
         });
         listPopupWindow.show();//把ListPopWindow展示出来
+    }
+
+    /**
+     * 绘制两图像间的特征点匹配过程
+     * @param src
+     * @param dst
+     * @return 绘制完成后的bitmap
+     */
+    private Bitmap drawMatches(Bitmap src,Bitmap dst){
+        //初始化bitmap
+        Mat srcMat = new Mat();
+        Mat dstMat = new Mat();
+        Utils.bitmapToMat(src, srcMat);
+        Utils.bitmapToMat(dst, dstMat);
+        Imgproc.cvtColor(srcMat, srcMat, Imgproc.COLOR_RGBA2RGB);
+        Imgproc.cvtColor(dstMat, dstMat, Imgproc.COLOR_RGBA2RGB);
+
+        //指定特征点检测器、描述子与匹配算法
+        FeatureDetector detector = FeatureDetector.create(FeatureDetector.AKAZE);
+        DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.AKAZE);
+        DescriptorMatcher descriptorMatcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE_HAMMING);
+
+        //关键点检测
+        MatOfKeyPoint srcKeyPoint = new MatOfKeyPoint();
+        MatOfKeyPoint dstKeyPoint = new MatOfKeyPoint();
+        detector.detect(srcMat,srcKeyPoint);
+        detector.detect(dstMat,dstKeyPoint);
+
+        //描述子生成
+        Mat srcDescriptor = new Mat();
+        Mat dstDescriptor = new Mat();
+        descriptorExtractor.compute(srcMat,srcKeyPoint,srcDescriptor);
+        descriptorExtractor.compute(dstMat,dstKeyPoint,dstDescriptor);
+
+        Features2d.drawKeypoints(srcMat,srcKeyPoint,srcMat);
+        Features2d.drawKeypoints(dstMat,dstKeyPoint,dstMat);
+
+        //特征匹配检测
+        MatOfDMatch matches = new MatOfDMatch();
+        descriptorMatcher.match(srcDescriptor,dstDescriptor,matches);
+
+        //对匹配结果进行筛选
+        List<DMatch> list = matches.toList();
+        List<DMatch> goodMatch = new ArrayList<DMatch>();
+        for (int i = 0; i < list.size(); i++) {
+            DMatch dmatch = list.get(i);
+            if (Math.abs(dmatch.queryIdx - dmatch.trainIdx) < 7f) {
+                goodMatch.add(dmatch);
+            }
+
+        }
+        matches.fromList(goodMatch);
+
+        Mat resultMat = new Mat();
+        Features2d.drawMatches(srcMat,srcKeyPoint,dstMat,dstKeyPoint,matches,resultMat);
+        Bitmap resultBitmap = Bitmap.createBitmap(resultMat.width(), resultMat.height(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(resultMat,resultBitmap);
+
+        //释放内存
+        srcKeyPoint.release();
+        dstKeyPoint.release();
+        srcDescriptor.release();
+        dstDescriptor.release();
+        matches.release();
+
+        return resultBitmap;
     }
 }

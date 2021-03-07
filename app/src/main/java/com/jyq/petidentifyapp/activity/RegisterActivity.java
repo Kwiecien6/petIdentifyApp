@@ -71,19 +71,17 @@ public class RegisterActivity extends AppCompatActivity {
         Bitmap petFace = getIntent().getParcelableExtra("PetFace");
         imageView.setImageBitmap(petFace);
 
-        //ORB特征点检测与绘制
-        FeatureDetector detector = FeatureDetector.create(FeatureDetector.ORB);
+        //AKAZE特征点检测与绘制
+        FeatureDetector detector = FeatureDetector.create(FeatureDetector.AKAZE);
         MatOfKeyPoint keyPoints = new MatOfKeyPoint();
         Mat petFaceMat = new Mat();
         Utils.bitmapToMat(petFace, petFaceMat);
-        Imgproc.cvtColor(petFaceMat, petFaceMat, Imgproc.COLOR_RGBA2RGB);
+        Imgproc.cvtColor(petFaceMat, petFaceMat, Imgproc.COLOR_RGBA2GRAY);
         detector.detect(petFaceMat, keyPoints);
         Features2d.drawKeypoints(petFaceMat,keyPoints,petFaceMat);
-        Imgproc.cvtColor(petFaceMat, petFaceMat, Imgproc.COLOR_RGB2RGBA);
 
         Bitmap featuresPetFace = Bitmap.createBitmap(petFaceMat.width(), petFaceMat.height(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(petFaceMat,featuresPetFace);
-
         featuresImageView.setImageBitmap(featuresPetFace);
 
         petSex.check(R.id.registerMaleRBtn);
