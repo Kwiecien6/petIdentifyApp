@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.jyq.petidentifyapp.R;
 import com.jyq.petidentifyapp.db.DatabaseHelper;
 import com.jyq.petidentifyapp.db.PetInfo;
+import com.jyq.petidentifyapp.util.FlashlightUtils;
 import com.jyq.petidentifyapp.util.PetMatcher;
 import com.jyq.petidentifyapp.util.ToastUtil;
 
@@ -56,11 +59,14 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
     public final static int FLAG_REGISTER = 1;
     public final static int FLAG_VERIFY = 2;
     int FLAG_DETECT_START = 0;
+    int FLAG_FLASH_ON = 0;
     Mat grayscaleImage;
     int absoluteObjSize;
     private CascadeClassifier mCascadeClassifier;
     private CameraBridgeViewBase mOpenCvCameraView;
     private Button mDetectStartBtn;
+    private Button mDetectBackBtn;
+    private Button flashBtn;
     List<PetInfo> petList;
     private Bitmap mDetectedPetFace;
     private PetMatcher matcher;
@@ -85,7 +91,6 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                             if (result == matcher.UNFINISHED) {
                                 ToastUtil.showToast(getApplicationContext(), "宠物识别中", 0);
                                 mDetectedPetFace = null;
-
                             } else if (result == matcher.NO_MATCHER) {
                                 ToastUtil.showToast(getApplicationContext(), "宠物识别成功，开始注册", 0);
                                 intent = new Intent(DetectActivity.this, RegisterActivity.class);
@@ -95,8 +100,6 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
 
                             } else {
                                 ToastUtil.showToast(getApplicationContext(), "宠物已经注册过啦", 0);
-                                mDetectedPetFace = null;
-
                             }
                         }
                     }
@@ -113,7 +116,6 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                                 mDetectedPetFace = null;
                             } else if (result == matcher.NO_MATCHER) {
                                 ToastUtil.showToast(getApplicationContext(), "宠物未注册，请前往注册", 0);
-                                mDetectedPetFace = null;
                             } else {
                                 ToastUtil.showToast(getApplicationContext(), "宠物身份验证成功:"+petList.get(result).getPetName(), 0);
                                 //跳转宠物信息界面
@@ -187,7 +189,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
             ActivityCompat.requestPermissions(DetectActivity.this, new String[]{android.Manifest.permission.CAMERA}, 1);
         }
 
-        //判断已经获取权限后的操作
+        //判断已经获取权限后打开相机
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.DetectCameraView);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
@@ -197,23 +199,55 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
             public void onClick(View v) {
                 if (FLAG_DETECT_START == 0) {
                     FLAG_DETECT_START = 1;
-                    mDetectStartBtn.setBackgroundResource(R.drawable.circle_drawable);
+                    mDetectStartBtn.setBackgroundResource(R.drawable.ic_baseline_radio_button_unchecked_24);
+                    mDetectedPetFace = null;
+                    matcher.setCounter(0);
                     ToastUtil.showToast(getApplicationContext(), "开始检测", 0);
                 } else {
                     FLAG_DETECT_START = 0;
-                    mDetectStartBtn.setBackgroundResource(R.drawable.circle_drawable_unselect);
+                    mDetectStartBtn.setBackgroundResource(R.drawable.ic_baseline_radio_button_checked_24);
+                    mDetectedPetFace = null;
+                    matcher.setCounter(0);
                     ToastUtil.showToast(getApplicationContext(), "暂停检测", 0);
                 }
             }
         });
 
+        //闪光灯控件监听
+        //闪光灯存在兼容性等问题,暂时无法使用
+        flashBtn = findViewById(R.id.detectFlashBtn);
+        FlashlightUtils.init(getApplicationContext());
+        flashBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(FLAG_FLASH_ON == 0){
+                    flashBtn.setBackgroundResource(R.drawable.ic_baseline_flash_on_24);
+                    FlashlightUtils.linghtOn();
+                    FLAG_FLASH_ON = 1;
+                }else {
+                    flashBtn.setBackgroundResource(R.drawable.ic_baseline_flash_off_24);
+                    FlashlightUtils.linghtOff();
+                    FLAG_FLASH_ON = 0;
+                }
+            }
+        });
+
+        //返回按钮监听
+        mDetectBackBtn = findViewById(R.id.detectBackBtn);
+        mDetectBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        //数据导入
         DatabaseHelper helper = new DatabaseHelper(DetectActivity.this);
         petList = helper.query();
         matcher = new PetMatcher(petList);
         helper.close();
 
         ToastUtil.showToast(getApplicationContext(), "请横屏使用", 0);
-
 
     }
 
@@ -270,7 +304,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
             for (int i = 0; i < facesArray.length; i++) {
                 Imgproc.rectangle(inputFrame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);
 
-                // 获取并利用message传递当前检测的脸
+                // 获取并利用message传递当前检测到的脸
                 try {
                     Mat faceMat = new Mat(inputFrame, facesArray[i]);
                     Imgproc.resize(faceMat, faceMat, new Size(200, 200));

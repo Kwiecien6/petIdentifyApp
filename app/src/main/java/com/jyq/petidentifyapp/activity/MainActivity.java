@@ -12,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.jyq.petidentifyapp.R;
@@ -26,6 +28,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //修改状态栏背景与字体颜色
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
         Button registerButton = (Button) findViewById(R.id.register);
         Button verifyButton = (Button) findViewById(R.id.verify);
         Button viewDataButton = (Button) findViewById(R.id.view_data);
@@ -35,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         verifyButton.setOnClickListener(this);
         initDatabase();
 
-
-
     }
 
 
@@ -45,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DatabaseHelper helper = new DatabaseHelper(this);
         helper.close();
     }
-
 
 
 

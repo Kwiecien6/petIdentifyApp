@@ -28,7 +28,7 @@ public class PetMatcher {
     private static int counter;
     public final int UNFINISHED = -2;
     public final int NO_MATCHER = -1;
-    private final int MAX_COUNTER = 64;
+    private final int MAX_COUNTER = 32;
     private final double MY_SIMILARITY = 0.8;
     private float nndrRatio = 0.7f;
     private List<String> mPathList;
@@ -39,6 +39,10 @@ public class PetMatcher {
         for (PetInfo pet : pets) {
             mPathList.add(pet.getPetPicPath());
         }
+    }
+
+    public void setCounter(int n){
+        counter = 0;
     }
 
     public int histogramMatch(Bitmap bitmap) {
@@ -70,7 +74,6 @@ public class PetMatcher {
             }
             return UNFINISHED;
         } else {
-            Log.e(TAG, "histogramMatch: 匹配结束");
             return NO_MATCHER;
         }
     }

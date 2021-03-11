@@ -313,7 +313,7 @@ Imgproc.cvtColor(petFaceMat,petFaceMat,Imgproc.COLOR_RGB2RGBA);
 Utils.matToBitmap(petFaceMat,petFace);
 
 
-2021.03.06
+2021.03.07
 为宠物匹配成功后的界面添加特征点匹配过程展示图；
 经比较，AKAZE检测器与描述子 比 ORB检测器与描述子 准确率更高；
 
@@ -391,3 +391,11 @@ returnresultBitmap;
 }
 
 
+2021.03.08
+优化系统界面，适配手机状态栏，修改图标。
+存在问题：闪光灯控件存在兼容性等问题，无法在识别时使用闪光灯；
+https://blog.csdn.net/jingzz1/article/details/105787463
+
+
+2021.03.11
+添加宠物数据搜索功能，优化相机界面

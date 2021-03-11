@@ -6,7 +6,7 @@
 6
 7    <uses-sdk
 7-->F:\petIdentify\petIdentifyProject\openCVLibrary330\src\main\AndroidManifest.xml:7:5-47
-8        android:minSdkVersion="16"
+8        android:minSdkVersion="21"
 8-->F:\petIdentify\petIdentifyProject\openCVLibrary330\src\main\AndroidManifest.xml:7:5-47
 9        android:targetSdkVersion="29" />
 9-->F:\petIdentify\petIdentifyProject\openCVLibrary330\src\main\AndroidManifest.xml:7:15-44

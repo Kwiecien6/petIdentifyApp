@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.jyq.petidentifyapp.R;
@@ -41,26 +42,38 @@ import static com.jyq.petidentifyapp.util.DateUtil.strToDate;
 
 public class ViewDataActivity extends Activity {
 
+    DatabaseHelper helper;
+    PetAdapter mAdapter;
+    List<PetInfo> pets;
+    List<PetInfo> tempList;
+    RecyclerView recyclerView;
+    SearchView searchView;
+    ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_data);
 
-        ImageView imageView = findViewById(R.id.nullTipImg);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        //修改状态栏背景与字体颜色
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+        imageView = findViewById(R.id.nullTipImg);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        DatabaseHelper helper = new DatabaseHelper(this);
-        List<PetInfo> pets = helper.query();
-        helper.close();
+        helper = new DatabaseHelper(this);
+        pets = helper.query();
+//        helper.close();
         if (pets.size() == 0) {
             imageView.setVisibility(View.VISIBLE);
             ToastUtil.showToast(getApplicationContext(), "暂无宠物数据", 0);
         } else {
             imageView.setVisibility(View.INVISIBLE);
 
-            PetAdapter mAdapter = new PetAdapter(pets);
+            mAdapter = new PetAdapter(pets);
             recyclerView.setAdapter(mAdapter);
 
             //设置每个Item的单击事件
@@ -71,6 +84,41 @@ public class ViewDataActivity extends Activity {
                 }
             });
         }
+
+        //搜索框监听事件
+        searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                pets.clear();
+                tempList = helper.find(query);
+                if(tempList.size() == 0){
+                    imageView.setVisibility(View.VISIBLE);
+                    ToastUtil.showToast(getApplicationContext(), "暂未查找到该宠物", 0);
+                }else{
+                    imageView.setVisibility(View.INVISIBLE);
+                    pets.addAll(tempList);
+                }
+                mAdapter.notifyDataSetChanged();
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                pets.clear();
+                tempList = helper.find(newText);
+                if(tempList.size() == 0){
+                    imageView.setVisibility(View.VISIBLE);
+                    ToastUtil.showToast(getApplicationContext(), "暂未查找到该宠物", 0);
+                }else{
+                    imageView.setVisibility(View.INVISIBLE);
+                    pets.addAll(tempList);
+                }
+                mAdapter.notifyDataSetChanged();
+                return false;
+            }
+        });
 
     }
 

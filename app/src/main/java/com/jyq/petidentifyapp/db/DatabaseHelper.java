@@ -96,6 +96,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return petList;
     }
 
+    public List<PetInfo> find(String str){
+        String sql = "select * from pet_data where name like '%"+str+"%'";
+        Cursor cursor = db.rawQuery(sql,null);
+        List<PetInfo> petList = new ArrayList<>();
+        if (cursor.moveToNext()) {
+            do {
+                PetInfo pet = new PetInfo();
+                pet.setPetID(cursor.getInt(cursor.getColumnIndex("id")));
+                pet.setPetName(cursor.getString(cursor.getColumnIndex("name")));
+                pet.setPetType(cursor.getString(cursor.getColumnIndex("type")));
+                pet.setPetSex(cursor.getString(cursor.getColumnIndex("sex")));
+                pet.setPetBirth(strToDate(cursor.getString(cursor.getColumnIndex("birth"))));
+                pet.setPetInfo(cursor.getString(cursor.getColumnIndex("info")));
+                pet.setPetRegistTime(strToDateLong(cursor.getString(cursor.getColumnIndex("registTime"))));
+                pet.setPetUpdateTime(strToDateLong(cursor.getString(cursor.getColumnIndex("updateTime"))));
+                pet.setPetPicPath(cursor.getString(cursor.getColumnIndex("path")));
+                petList.add(pet);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return petList;
+    }
+
     public void insert(PetInfo petInfo) {
         ContentValues values = new ContentValues();
         values.put("name", petInfo.getPetName());

@@ -4,14 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".activity.MainActivity">
+
 
     <ImageView
         android:id="@+id/img"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_above="@id/menu"
-        android:src="@drawable/sample_pet_pic" />
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/logo_text" />
+
 
     <LinearLayout
         android:id="@+id/menu"
@@ -24,9 +28,11 @@
             android:id="@+id/register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="60dp"
+            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/button_drawable"
+            android:drawableLeft="@drawable/ic_outline_camera_alt_24"
+            android:paddingHorizontal="80dp"
+            android:background="@drawable/button_drawable_white"
             android:text="识别注册"
             android:textSize="18sp" />
 
@@ -35,9 +41,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/register"
-            android:layout_marginHorizontal="60dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/button_drawable"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/ic_outline_fingerprint_24"
+            android:paddingHorizontal="80dp"
+            android:background="@drawable/button_drawable_white"
             android:text="身份验证"
             android:textSize="18sp" />
 
@@ -46,11 +54,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/verify"
-            android:layout_marginHorizontal="60dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/button_drawable"
-            android:text="查看宠物数据"
+            android:drawableLeft="@drawable/ic_outline_folder_open_24"
+            android:paddingHorizontal="80dp"
+            android:background="@drawable/button_drawable_white"
+            android:text="宠物数据"
             android:textSize="18sp" />
 
     </LinearLayout>
