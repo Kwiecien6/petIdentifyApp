@@ -150,6 +150,36 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="注册地址: "
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/registerPetLocationBtn"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_outline_location_on_24" />
+
+            <EditText
+                android:id="@+id/registerPetLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="点击获取位置信息"
+                android:inputType="textMultiLine"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="宠物介绍: "
                 android:textSize="15sp" />
 

@@ -1,6 +1,5 @@
 package com.jyq.petidentifyapp.db;
 
-import com.jyq.petidentifyapp.util.DateUtil;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,34 +16,24 @@ public class PetInfo implements Serializable {
     private String petSex;
     private Date petBirth;
     private String petInfo;
+    private String petRegistLocation;
+    private String petHistLocation;
     private Date petRegistTime;
     private Date petUpdateTime;
     private String petPicPath;
 
     public PetInfo(){};
 
-    @Override
-    public String toString() {
-        return "PetInfo{" +
-                "petID=" + petID +
-                ", petName='" + petName + '\'' +
-                ", petType='" + petType + '\'' +
-                ", petSex='" + petSex + '\'' +
-                ", petBirth=" + petBirth +
-                ", petInfo='" + petInfo + '\'' +
-                ", petRegistTime=" + petRegistTime +
-                ", petUpdateTime=" + petUpdateTime +
-                ", petPicPath='" + petPicPath + '\'' +
-                '}';
-    }
 
-    public PetInfo(Integer petID, String petName, String petType, String petSex, Date petBirth, String petInfo, Date petRegistTime, Date petUpdateTime, String petPicPath) {
+    public PetInfo(Integer petID, String petName, String petType, String petSex, Date petBirth, String petInfo, String petRegistLocation, String petHistLocation, Date petRegistTime, Date petUpdateTime, String petPicPath) {
         this.petID = petID;
         this.petName = petName;
         this.petType = petType;
         this.petSex = petSex;
         this.petBirth = petBirth;
         this.petInfo = petInfo;
+        this.petRegistLocation = petRegistLocation;
+        this.petHistLocation = petHistLocation;
         this.petRegistTime = petRegistTime;
         this.petUpdateTime = petUpdateTime;
         this.petPicPath = petPicPath;
@@ -122,4 +111,36 @@ public class PetInfo implements Serializable {
         this.petUpdateTime = petUpdateTime;
     }
 
+    public String getPetRegistLocation() {
+        return petRegistLocation;
+    }
+
+    public void setPetRegistLocation(String petRegistLocation) {
+        this.petRegistLocation = petRegistLocation;
+    }
+
+    public String getPetHistLocation() {
+        return petHistLocation;
+    }
+
+    public void setPetHistLocation(String petHistLocation) {
+        this.petHistLocation = petHistLocation;
+    }
+
+    @Override
+    public String toString() {
+        return "PetInfo{" +
+                "petID=" + petID +
+                ", petName='" + petName + '\'' +
+                ", petType='" + petType + '\'' +
+                ", petSex='" + petSex + '\'' +
+                ", petBirth=" + petBirth +
+                ", petInfo='" + petInfo + '\'' +
+                ", petRegistLocation='" + petRegistLocation + '\'' +
+                ", petHistlocation='" + petHistLocation + '\'' +
+                ", petRegistTime=" + petRegistTime +
+                ", petUpdateTime=" + petUpdateTime +
+                ", petPicPath='" + petPicPath + '\'' +
+                '}';
+    }
 }

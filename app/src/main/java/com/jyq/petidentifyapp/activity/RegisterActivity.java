@@ -2,6 +2,7 @@ package com.jyq.petidentifyapp.activity;
 
 import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.jyq.petidentifyapp.R;
 import com.jyq.petidentifyapp.db.DatabaseHelper;
 import com.jyq.petidentifyapp.db.PetInfo;
+import com.jyq.petidentifyapp.util.LocationUtil;
 import com.jyq.petidentifyapp.util.ToastUtil;
 
 import org.opencv.android.Utils;
@@ -43,6 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText petType;
     private RadioGroup petSex;
     private EditText petBirth;
+    private EditText petLocation;
+    private Button petLocationBtn;
     private EditText petInfo;
     private Button register;
     private ImageView imageView;
@@ -64,6 +68,8 @@ public class RegisterActivity extends AppCompatActivity {
         petType = (EditText) findViewById(R.id.registerPetTypeEdText);
         petSex = (RadioGroup) findViewById(R.id.registerPetSex);
         petBirth = (EditText) findViewById(R.id.registerPetBirthEdText);
+        petLocation = (EditText) findViewById(R.id.registerPetLocation);
+        petLocationBtn = (Button) findViewById(R.id.registerPetLocationBtn);
         petInfo = (EditText) findViewById(R.id.registerPetInfo);
         register = (Button) findViewById(R.id.registerBtn);
 
@@ -104,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
 
+
 //        点击EditText 弹出日期选择器DatePickerDialog
         petBirth.setInputType(InputType.TYPE_NULL);
         petBirth.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -122,6 +129,15 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
+        petLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location location = LocationUtil.getMyLocation(RegisterActivity.this);
+                petLocation.setText(LocationUtil.getLocationAddress(location,RegisterActivity.this));
+            }
+        });
+
+
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(petName.getText())
                 && !TextUtils.isEmpty(petBirth.getText())
                 && !TextUtils.isEmpty(petInfo.getText())
+                && !TextUtils.isEmpty(petLocation.getText())
                 && !TextUtils.isEmpty(petType.getText())) {
 
             DatabaseHelper dbHelper = new DatabaseHelper(RegisterActivity.this);
@@ -148,6 +165,8 @@ public class RegisterActivity extends AppCompatActivity {
                 pet.setPetName(petName.getText().toString());
                 pet.setPetType(petType.getText().toString());
                 pet.setPetBirth(strToDate(petBirth.getText().toString()));
+                pet.setPetRegistLocation(petLocation.getText().toString());
+                pet.setPetHistLocation(petLocation.getText().toString());
                 pet.setPetInfo(petInfo.getText().toString());
                 pet.setPetRegistTime(getNowDate());
                 pet.setPetUpdateTime(getNowDate());

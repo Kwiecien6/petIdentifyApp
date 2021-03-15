@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.jyq.petidentifyapp.R;
 import com.jyq.petidentifyapp.db.DatabaseHelper;
 import com.jyq.petidentifyapp.db.PetInfo;
+import com.jyq.petidentifyapp.util.LocationUtil;
 import com.jyq.petidentifyapp.util.ToastUtil;
 
 import org.opencv.android.Utils;
@@ -67,6 +68,9 @@ public class MatcherActivity extends AppCompatActivity {
         final EditText matcherPetSex = findViewById(R.id.matcherPetSex);
         final EditText matcherPetBirth = findViewById(R.id.matcherPetBirth);
         final EditText matcherPetInfo = findViewById(R.id.matcherPetInfo);
+        TextView matcherPetRegistLocation = findViewById(R.id.matcherPetRegistLocation);
+        final TextView matcherPetHistLocation = findViewById(R.id.matcherPetHistLocation);
+        final TextView matcherPetNowLocation = findViewById(R.id.matcherPetNowLocation);
         TextView matcherPetRegistTime = findViewById(R.id.matcherPetRegistTime);
         final TextView matcherPetUpdateTime = findViewById(R.id.matcherPetUpdateTime);
         Button matcherUpdateBtn = findViewById(R.id.matcherUpdateBtn);
@@ -82,9 +86,27 @@ public class MatcherActivity extends AppCompatActivity {
         matcherPetType.setText(matcherPet.getPetType());
         matcherPetSex.setText(matcherPet.getPetSex());
         matcherPetBirth.setText(dateToStr(matcherPet.getPetBirth()));
+        matcherPetRegistLocation.setText(matcherPet.getPetRegistLocation());
+        matcherPetHistLocation.setText(matcherPet.getPetHistLocation());
+        matcherPetNowLocation.setText(LocationUtil.getLocationAddress(LocationUtil.getMyLocation(MatcherActivity.this),MatcherActivity.this));
         matcherPetInfo.setText(matcherPet.getPetInfo());
         matcherPetRegistTime.setText(dateToStrLong(matcherPet.getPetRegistTime()));
         matcherPetUpdateTime.setText(dateToStrLong(matcherPet.getPetUpdateTime()));
+
+
+        matcherFunctionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHelper updateHelper1 = new DatabaseHelper(MatcherActivity.this);
+                matcherPet.setPetUpdateTime(getNowDate());
+                matcherPetUpdateTime.setText(dateToStrLong(getNowDate()));
+                matcherPet.setPetHistLocation(matcherPetHistLocation.getText().toString() + "\n\n" + matcherPetNowLocation.getText().toString());
+                updateHelper1.updatePet(matcherPet);
+                updateHelper1.close();
+                ToastUtil.showToast(getApplicationContext(), "宠物 " + matcherPet.getPetName() + " 行动轨迹已更新", 1);
+            }
+        });
+
 
         matcherUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,11 +117,11 @@ public class MatcherActivity extends AppCompatActivity {
                 matcherPet.setPetInfo(matcherPetInfo.getText().toString());
                 matcherPet.setPetUpdateTime(getNowDate());
 
-                DatabaseHelper updateHelper = new DatabaseHelper(MatcherActivity.this);
-                updateHelper.updatePet(matcherPet);
+                DatabaseHelper updateHelper2 = new DatabaseHelper(MatcherActivity.this);
+                updateHelper2.updatePet(matcherPet);
 
                 matcherPetUpdateTime.setText(dateToStrLong(getNowDate()));
-                updateHelper.close();
+                updateHelper2.close();
 
                 ToastUtil.showToast(getApplicationContext(), "宠物 " + matcherPet.getPetName() + " 已更新", 1);
             }

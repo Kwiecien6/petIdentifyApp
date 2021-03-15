@@ -15,6 +15,7 @@
         android:src="@drawable/null_tip"
         android:visibility="visible"/>
 
+
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"

@@ -399,3 +399,22 @@ https://blog.csdn.net/jingzz1/article/details/105787463
 
 2021.03.11
 添加宠物数据搜索功能，优化相机界面
+计划：搜索功能与相机界面美化，可在相机右下角添加返回按钮，参考微信拍照界面。
+
+
+2021.03.15
+为系统添加位置功能与宠物行动轨迹记录；
+https://blog.csdn.net/u014714188/article/details/98209772
+private Integer petID;
+private String petName;
+private String petType;
+private String petSex;
+private Date petBirth;
+private String petInfo;
+private String petRegistLocation;
+private String petHistLocation;
+private Date petRegistTime;
+private Date petUpdateTime;
+private String petPicPath;
+
+

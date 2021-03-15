@@ -155,6 +155,8 @@ public class ViewDataActivity extends Activity {
         final EditText detailPetSex = view.findViewById(R.id.detailPetSex);
         final EditText detailPetBirth = view.findViewById(R.id.detailPetBirth);
         final EditText detailPetInfo = view.findViewById(R.id.detailPetInfo);
+        TextView detailPetRegistLocation = view.findViewById(R.id.detailPetRegistLocation);
+        final TextView detailPetHistLocation = view.findViewById(R.id.detailPetHistLocation);
         TextView detailPetRegistTime = view.findViewById(R.id.detailPetRegistTime);
         TextView detailPetUpdateTime = view.findViewById(R.id.detailPetUpdateTime);
         Button detailDeleteBtn = view.findViewById(R.id.detailDeleteBtn);
@@ -172,6 +174,8 @@ public class ViewDataActivity extends Activity {
         detailPetType.setText(pet.getPetType());
         detailPetSex.setText(pet.getPetSex());
         detailPetBirth.setText(dateToStr(pet.getPetBirth()));
+        detailPetRegistLocation.setText(pet.getPetRegistLocation());
+        detailPetHistLocation.setText(pet.getPetHistLocation());
         detailPetInfo.setText(pet.getPetInfo());
         detailPetRegistTime.setText(dateToStrLong(pet.getPetRegistTime()));
         detailPetUpdateTime.setText(dateToStrLong(pet.getPetUpdateTime()));
@@ -221,6 +225,7 @@ public class ViewDataActivity extends Activity {
                 pet.setPetType(detailPetType.getText().toString());
                 pet.setPetSex(detailPetSex.getText().toString());
                 pet.setPetBirth(strToDate(detailPetBirth.getText().toString()));
+                pet.setPetHistLocation(detailPetHistLocation.getText().toString());
                 pet.setPetInfo(detailPetInfo.getText().toString());
                 pet.setPetUpdateTime(getNowDate());
 

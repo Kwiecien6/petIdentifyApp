@@ -34,6 +34,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "sex text, " +
             "birth text, " +
             "info text, " +
+            "registLocation text, " +
+            "histLocation text, " +
             "registTime text, " +
             "updateTime text, " +
             "path text)";
@@ -85,6 +87,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 pet.setPetType(cursor.getString(cursor.getColumnIndex("type")));
                 pet.setPetSex(cursor.getString(cursor.getColumnIndex("sex")));
                 pet.setPetBirth(strToDate(cursor.getString(cursor.getColumnIndex("birth"))));
+                pet.setPetRegistLocation(cursor.getString(cursor.getColumnIndex("registLocation")));
+                pet.setPetHistLocation(cursor.getString(cursor.getColumnIndex("histLocation")));
                 pet.setPetInfo(cursor.getString(cursor.getColumnIndex("info")));
                 pet.setPetRegistTime(strToDateLong(cursor.getString(cursor.getColumnIndex("registTime"))));
                 pet.setPetUpdateTime(strToDateLong(cursor.getString(cursor.getColumnIndex("updateTime"))));
@@ -108,6 +112,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 pet.setPetType(cursor.getString(cursor.getColumnIndex("type")));
                 pet.setPetSex(cursor.getString(cursor.getColumnIndex("sex")));
                 pet.setPetBirth(strToDate(cursor.getString(cursor.getColumnIndex("birth"))));
+                pet.setPetRegistLocation(cursor.getString(cursor.getColumnIndex("registLocation")));
+                pet.setPetHistLocation(cursor.getString(cursor.getColumnIndex("histLocation")));
                 pet.setPetInfo(cursor.getString(cursor.getColumnIndex("info")));
                 pet.setPetRegistTime(strToDateLong(cursor.getString(cursor.getColumnIndex("registTime"))));
                 pet.setPetUpdateTime(strToDateLong(cursor.getString(cursor.getColumnIndex("updateTime"))));
@@ -125,6 +131,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("type", petInfo.getPetType());
         values.put("sex", petInfo.getPetSex());
         values.put("birth", dateToStr(petInfo.getPetBirth()));
+        values.put("registLocation", petInfo.getPetRegistLocation());
+        values.put("histLocation", petInfo.getPetHistLocation());
         values.put("info", petInfo.getPetInfo());
         values.put("registTime", dateToStrLong(petInfo.getPetRegistTime()));
         values.put("updateTime", dateToStrLong(petInfo.getPetUpdateTime()));
@@ -152,6 +160,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("type",pet.getPetType());
         values.put("sex",pet.getPetSex());
         values.put("birth",dateToStr(pet.getPetBirth()));
+        values.put("histLocation",pet.getPetHistLocation());
         values.put("info",pet.getPetInfo());
         values.put("updateTime", dateToStrLong(getNowDate()));
 
