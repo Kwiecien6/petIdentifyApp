@@ -417,4 +417,55 @@ private Date petRegistTime;
 private Date petUpdateTime;
 private String petPicPath;
 
+2021.03.16
+存在问题：获取位置信息所使用的方法locationManager.getLastKnownLocation有时会返回null，无法获取当前位置信息。
 
+解决方法：
+经过调试发现，由于手机硬件、室内等原因，GPS定位时间较久，特别是在刚开启手机位置信息时。
+
+定位存在三种Location Provider
+network（网络定位，通常是利用手机基站和WIFI节点的地址来大致定位位置）、
+passive（被动定位，当其他应用使用定位更新了定位信息，系统会保存下来）、
+gps（GPS定位，手机内部GPS芯片利用卫星获得自己的位置信息）
+
+解决方案选择遍历三种方法，取其中精确度较高者。
+
+//获取LocationManager的实例对象
+locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+//获取支持的provider列表
+List<String> providers = locationManager.getProviders(true);
+Location bestLocation = null;
+//遍历provider列表
+for (String provider : providers) {
+    //通过getLastKnowLocation方法来获取
+    Location l = locationManager.getLastKnownLocation(provider);
+    if (l == null) {
+         continue;
+    }
+    if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+         // Found best last known location
+         bestLocation = l;
+     }
+}
+
+
+参考方法1：
+https://blog.csdn.net/u013334392/article/details/91971758?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.baidujs&dist_request_id=1328656.12883.16159057549867333&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.baidujs
+
+参考方法2：
+https://cloud.tencent.com/developer/article/1198192
+
+
+2021.03.20
+完善定位功能，在检测界面中添加从手机相册上传宠物图片进行检测识别的功能。
+
+参考：
+https://blog.csdn.net/dbzzcz/article/details/105517904
+https://riptutorial.com/opencv/topic/6377/using-cascade-classifiers-in-java
+https://blog.csdn.net/weixin_43742354/article/details/103850125
+
+
+问题：
+获取到相册图片路径后，使用bitmapfactory.decodefile返回值为null
+解决：
+https://blog.csdn.net/ErrorNam/article/details/104363700?utm_medium=distribute.pc_relevant_bbs_down.none-task-blog-baidujs-1.nonecase&depth_1-utm_source=distribute.pc_relevant_bbs_down.none-task-blog-baidujs-1.nonecase

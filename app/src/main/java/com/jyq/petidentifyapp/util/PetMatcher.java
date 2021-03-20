@@ -41,11 +41,11 @@ public class PetMatcher {
         }
     }
 
-    public void setCounter(int n){
-        counter = 0;
+    public void setCounter(int n) {
+        counter = n;
     }
 
-    public int histogramMatch(Bitmap bitmap) {
+    public int histogramMatchForVideo(Bitmap bitmap) {
         if (counter < MAX_COUNTER) {
             Mat testMat = new Mat();
             Utils.bitmapToMat(bitmap, testMat);
@@ -78,6 +78,28 @@ public class PetMatcher {
         }
     }
 
+    public int histogramMatchForPhoto(Bitmap bitmap) {
+        Mat testMat = new Mat();
+        Utils.bitmapToMat(bitmap, testMat);
+        // 转灰度矩阵
+        Imgproc.cvtColor(testMat, testMat, Imgproc.COLOR_RGB2GRAY);
+        // 把矩阵的类型转换为Cv_32F，因为在c++代码中会判断类型
+        testMat.convertTo(testMat, CvType.CV_32F);
+        for (int i = 0; i < mPathList.size(); i++) {
+            String path = mPathList.get(i);
+            Mat mat = Imgcodecs.imread(path);
+            Imgproc.resize(mat, mat, new Size(200, 200));
+            Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGB2GRAY);
+            mat.convertTo(mat, CvType.CV_32F);
+            // 直方图比较
+            double similarity = Imgproc.compareHist(mat, testMat, Imgproc.CV_COMP_CORREL);
+            if (similarity >= MY_SIMILARITY) {
+                return i;
+            }
+        }
+        return NO_MATCHER;
+    }
+
 
     public int matchImage(Bitmap bitmap) {
         if (counter < MAX_COUNTER) {
@@ -92,7 +114,7 @@ public class PetMatcher {
                 Imgproc.resize(petsMat, petsMat, new Size(200, 200));
                 Imgproc.cvtColor(petsMat, petsMat, Imgproc.COLOR_RGBA2GRAY);
 
-                boolean similarity = ORBMatch(tempMat,petsMat);
+                boolean similarity = ORBMatch(tempMat, petsMat);
 
                 if (similarity == true) {
                     return i;
@@ -107,7 +129,7 @@ public class PetMatcher {
         }
     }
 
-    public boolean ORBMatch(Mat tempMat,Mat petsMat){
+    public boolean ORBMatch(Mat tempMat, Mat petsMat) {
         Imgproc.cvtColor(tempMat, petsMat, Imgproc.COLOR_RGBA2RGB);
         Imgproc.cvtColor(tempMat, petsMat, Imgproc.COLOR_RGBA2RGB);
 
@@ -119,21 +141,21 @@ public class PetMatcher {
         //关键点检测
         MatOfKeyPoint tempKeyPoint = new MatOfKeyPoint();
         MatOfKeyPoint petsKeyPoint = new MatOfKeyPoint();
-        detector.detect(tempMat,tempKeyPoint);
-        detector.detect(petsMat,petsKeyPoint);
+        detector.detect(tempMat, tempKeyPoint);
+        detector.detect(petsMat, petsKeyPoint);
 
         //描述子生成
         Mat tempDescriptors = new Mat();
         Mat petsDescriptors = new Mat();
-        descriptorExtractor.compute(tempMat,tempKeyPoint,tempDescriptors);
-        descriptorExtractor.compute(petsMat,petsKeyPoint,petsDescriptors);
+        descriptorExtractor.compute(tempMat, tempKeyPoint, tempDescriptors);
+        descriptorExtractor.compute(petsMat, petsKeyPoint, petsDescriptors);
 
-        Features2d.drawKeypoints(tempMat,tempKeyPoint,tempMat);
-        Features2d.drawKeypoints(petsMat,petsKeyPoint,petsMat);
+        Features2d.drawKeypoints(tempMat, tempKeyPoint, tempMat);
+        Features2d.drawKeypoints(petsMat, petsKeyPoint, petsMat);
 
         //特征匹配检测
         MatOfDMatch matches = new MatOfDMatch();
-        descriptorMatcher.match(tempDescriptors,petsDescriptors,matches);
+        descriptorMatcher.match(tempDescriptors, petsDescriptors, matches);
 
         List<DMatch> l = matches.toList();
         List<DMatch> goodMatch = new ArrayList<DMatch>();
@@ -170,9 +192,9 @@ public class PetMatcher {
         matches.release();
 
         //当匹配后的特征点大于等于 10 个，则认为2图匹配成功
-        if(goodMatch.size() >= 10 ){
+        if (goodMatch.size() >= 10) {
             return true;
-        }else return false;
+        } else return false;
 
     }
 

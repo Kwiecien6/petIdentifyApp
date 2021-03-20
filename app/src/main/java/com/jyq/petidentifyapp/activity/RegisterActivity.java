@@ -133,7 +133,11 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Location location = LocationUtil.getMyLocation(RegisterActivity.this);
-                petLocation.setText(LocationUtil.getLocationAddress(location,RegisterActivity.this));
+                if (location == null){
+                    ToastUtil.showToast(getApplicationContext(), "定位失败,请检查GPS是否打开", 0);
+                }else {
+                    petLocation.setText(LocationUtil.getLocationAddress(location, RegisterActivity.this));
+                }
             }
         });
 

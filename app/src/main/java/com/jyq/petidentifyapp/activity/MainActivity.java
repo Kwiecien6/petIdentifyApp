@@ -10,11 +10,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jyq.petidentifyapp.R;
 import com.jyq.petidentifyapp.db.*;
@@ -43,6 +46,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
         }
+
+        //定位测试
+        ImageView imageView = (ImageView) findViewById(R.id.img2);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView locationTextView = (TextView) findViewById(R.id.location);
+                Location location = LocationUtil.getMyLocation(MainActivity.this);
+                if (location == null){
+                    ToastUtil.showToast(getApplicationContext(), "定位失败,请检查GPS是否打开", 0);
+                }else {
+                    locationTextView.setText(LocationUtil.getLocationAddress(location,MainActivity.this));
+                }
+            }
+        });
+
 
         Button registerButton = (Button) findViewById(R.id.register);
         Button verifyButton = (Button) findViewById(R.id.verify);

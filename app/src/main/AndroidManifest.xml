@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
@@ -28,6 +29,7 @@
         android:icon="@drawable/logo3"
         android:label="宠物识别"
         android:roundIcon="@drawable/logo3"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <activity android:name=".activity.MainActivity">
@@ -36,21 +38,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activity.RegisterActivity" />
+
         <activity android:name=".activity.ViewDataActivity" />
+
         <activity android:name=".activity.MatcherActivity"></activity>
+
         <activity
             android:name=".activity.DetectActivity"
             android:configChanges="orientation"
             android:screenOrientation="landscape"
+            android:requestLegacyExternalStorage="true"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"></activity>
+
         <activity
             android:name=".activity.TestMainActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="landscape"></activity>
+
         <activity
             android:name=".activity.TestIdentifyActivity"
             android:screenOrientation="landscape"></activity>
+
     </application>
 
 </manifest>

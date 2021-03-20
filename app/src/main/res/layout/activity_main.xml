@@ -16,6 +16,23 @@
         android:layout_marginTop="10dp"
         android:src="@drawable/logo_text" />
 
+    <ImageView
+        android:id="@+id/img2"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_outline_location_on_24"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/img" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
+        android:layout_below="@+id/img"
+        android:layout_toRightOf="@+id/img2"
+        android:textSize="10sp"
+        android:hint="当前位置"/>
 
     <LinearLayout
         android:id="@+id/menu"

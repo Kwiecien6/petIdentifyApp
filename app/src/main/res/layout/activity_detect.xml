@@ -8,6 +8,8 @@
     xmlns:opencv="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.DetectActivity">
 
+
+
     <org.opencv.android.JavaCameraView
         android:id="@+id/DetectCameraView"
         android:layout_width="match_parent"
@@ -16,6 +18,11 @@
         opencv:show_fps="true"
         opencv:camera_id="any"/>
 
+    <ImageView
+        android:id="@+id/detectImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <Button
         android:id="@+id/detectStartBtn"
         android:layout_width="wrap_content"
@@ -23,6 +30,27 @@
         android:background="@drawable/ic_baseline_radio_button_checked_24"
         android:layout_marginRight="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/detectCheckBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:background="@drawable/ic_baseline_check_24"
+        android:layout_marginRight="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/detectPhotoBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/ic_outline_photo_24"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
