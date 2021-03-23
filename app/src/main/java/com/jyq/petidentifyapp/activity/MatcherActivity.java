@@ -38,6 +38,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -213,17 +214,33 @@ public class MatcherActivity extends AppCompatActivity {
 
         //特征匹配检测
         MatOfDMatch matches = new MatOfDMatch();
-        descriptorMatcher.match(srcDescriptor,dstDescriptor,matches);
+////        descriptorMatcher.match(srcDescriptor,dstDescriptor,matches);
+////
+////        //对匹配结果进行筛选
+////        List<DMatch> list = matches.toList();
+////        List<DMatch> goodMatch = new ArrayList<DMatch>();
+////        for (int i = 0; i < list.size(); i++) {
+////            DMatch dmatch = list.get(i);
+////            if (Math.abs(dmatch.queryIdx - dmatch.trainIdx) < 0.5f) {
+////                goodMatch.add(dmatch);
+////            }
+////
+////        }
+        List<MatOfDMatch> matchesList = new LinkedList();
+        LinkedList<DMatch> goodMatch = new LinkedList();
+        //使用KNN-matching算法，在给定特征描述集合中寻找最佳匹配
+        // 令K=2，则每个match得到两个最接近的descriptor，然后计算最接近距离和次接近距离之间的比值，当比值大于既定值时，才作为最终match。
+        descriptorMatcher.knnMatch(srcDescriptor,dstDescriptor,matchesList,2);
 
-        //对匹配结果进行筛选
-        List<DMatch> list = matches.toList();
-        List<DMatch> goodMatch = new ArrayList<DMatch>();
-        for (int i = 0; i < list.size(); i++) {
-            DMatch dmatch = list.get(i);
-            if (Math.abs(dmatch.queryIdx - dmatch.trainIdx) < 7f) {
-                goodMatch.add(dmatch);
+        //对匹配结果进行筛选，依据distance进行筛选
+        for(int i = 0; i < matchesList.size(); i++){
+            DMatch[] dmatchArray = matchesList.get(i).toArray();
+            DMatch m1 = dmatchArray[0];
+            DMatch m2 = dmatchArray[1];
+
+            if (m1.distance <= m2.distance * 0.5f) {
+                goodMatch.addLast(m1);
             }
-
         }
         matches.fromList(goodMatch);
 

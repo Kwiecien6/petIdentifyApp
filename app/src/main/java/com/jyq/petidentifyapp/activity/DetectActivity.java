@@ -88,7 +88,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                             startActivity(intent);
                             DetectActivity.this.finish();
                         } else {
-                            int result = matcher.histogramMatchForVideo(mDetectedPetFace);
+                            int result = matcher.matchImageForVideo(mDetectedPetFace);
                             if (result == matcher.UNFINISHED) {
                                 ToastUtil.showToast(getApplicationContext(), "宠物识别中", 0);
                                 mDetectedPetFace = null;
@@ -110,7 +110,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                             ToastUtil.showToast(getApplicationContext(), "宠物未注册，请前往注册", 0);
                         } else {
                             mDetectedPetFace = (Bitmap) msg.obj;
-                            int result = matcher.histogramMatchForVideo(mDetectedPetFace);
+                            int result = matcher.matchImageForVideo(mDetectedPetFace);
                             if (result == matcher.UNFINISHED) {
                                 ToastUtil.showToast(getApplicationContext(), "宠物验证中", 0);
                                 mDetectedPetFace = null;
@@ -138,7 +138,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                             startActivity(intent);
                             DetectActivity.this.finish();
                         }else {
-                            int result = matcher.histogramMatchForPhoto(mDetectedPetFace);
+                            int result = matcher.matchImageForPhoto(mDetectedPetFace);
                             if(result == matcher.NO_MATCHER){
                                 ToastUtil.showToast(getApplicationContext(), "宠物识别成功，开始注册", 0);
                                 intent = new Intent(DetectActivity.this, RegisterActivity.class);
@@ -157,7 +157,7 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
                             ToastUtil.showToast(getApplicationContext(), "宠物未注册，请前往注册", 0);
                         }else {
                             mDetectedPetFace = (Bitmap) msg.obj;
-                            int result = matcher.histogramMatchForPhoto(mDetectedPetFace);
+                            int result = matcher.matchImageForPhoto(mDetectedPetFace);
                             if(result == matcher.NO_MATCHER){
                                 ToastUtil.showToast(getApplicationContext(), "宠物未注册，请前往注册", 0);
                             }else{
