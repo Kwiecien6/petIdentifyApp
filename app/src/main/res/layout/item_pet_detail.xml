@@ -109,6 +109,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="是否绝育: "
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/detailPetSterilization"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:orientation="horizontal">
@@ -124,6 +143,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
+                    android:maxLines="1"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="宠物状态: "
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/detailPetState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="宠物主人: "
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/detailPetOwner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="联系方式: "
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/detailPetOwnerPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -165,6 +241,23 @@
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
                     android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="宠物照片: "
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/detailPetDailyPic"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
             </LinearLayout>
 
             <LinearLayout

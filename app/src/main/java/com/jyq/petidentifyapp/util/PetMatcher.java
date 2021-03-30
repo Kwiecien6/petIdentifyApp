@@ -15,7 +15,6 @@ import org.opencv.core.Size;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
-import org.opencv.features2d.Features2d;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
@@ -28,7 +27,7 @@ public class PetMatcher {
     private static int counter;
     public final int UNFINISHED = -2;
     public final int NO_MATCHER = -1;
-    private final int MAX_COUNTER = 8;
+    private final int MAX_COUNTER = 5;
     private final double MY_SIMILARITY = 0.8;
     private float nndrRatio = 0.5f;
     private List<String> mPathList;
@@ -113,7 +112,7 @@ public class PetMatcher {
                 Imgproc.resize(petsMat, petsMat, new Size(200, 200));
                 petsMat.convertTo(petsMat, CvType.CV_32F);
 
-                boolean similarity = ORBMatch(tempMat, petsMat);
+                boolean similarity = Match(tempMat, petsMat);
 
                 if (similarity == true) {
                     return i;
@@ -138,7 +137,7 @@ public class PetMatcher {
             Mat petsMat = Imgcodecs.imread(path);
             Imgproc.resize(petsMat, petsMat, new Size(200, 200));
             petsMat.convertTo(petsMat, CvType.CV_32F);
-            boolean similarity = ORBMatch(tempMat, petsMat);
+            boolean similarity = Match(tempMat, petsMat);
 
             if (similarity == true) {
                 return i;
@@ -147,7 +146,7 @@ public class PetMatcher {
         return NO_MATCHER;
     }
 
-    public boolean ORBMatch(Mat tempMat, Mat petsMat) {
+    public boolean Match(Mat tempMat, Mat petsMat) {
         Imgproc.cvtColor(tempMat, tempMat, Imgproc.COLOR_RGBA2RGB);
         Imgproc.cvtColor(petsMat, petsMat, Imgproc.COLOR_RGBA2RGB);
 

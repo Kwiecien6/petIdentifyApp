@@ -53,6 +53,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         ImageView petFace;
+        ImageView petLostWarning;
         TextView petID;
         TextView petName;
         TextView petType;
@@ -63,6 +64,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
         private ViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView;
+            petLostWarning = (ImageView) itemView.findViewById(R.id.petLostWarning);
             petFace = (ImageView) itemView.findViewById(R.id.petFace);
             petID = (TextView) itemView.findViewById(R.id.petID);
             petName = (TextView) itemView.findViewById(R.id.petName);
@@ -106,6 +108,11 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder> {
         holder.petType.setText("品种: " + pet.getPetType());
         holder.petSex.setText("性别: " + pet.getPetSex());
         holder.petBirth.setText("出生日期: " + dateToStr(pet.getPetBirth()));
+
+        if(pet.getPetState().equals("走失")){
+            holder.petLostWarning.setVisibility(View.VISIBLE);
+        }
+
         Bitmap bitmap = BitmapFactory.decodeFile(pet.getPetPicPath());
         holder.petFace.setImageBitmap(bitmap);
 

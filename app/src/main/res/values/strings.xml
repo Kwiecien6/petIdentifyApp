@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">petIdentifyApp</string>
+
+    <string-array name="pet_type">
+        <item>波斯猫</item>
+        <item>英国短毛猫</item>
+        <item>英国蓝猫</item>
+        <item>美国短毛猫</item>
+        <item>布偶猫</item>
+        <item>暹罗猫</item>
+        <item>狸花猫</item>
+        <item>波斯猫</item>
+        <item>缅因猫</item>
+        <item>挪威纳猫</item>
+        <item>东方短毛猫</item>
+        <item>苏格兰折耳猫</item>
+        <item>混血或家猫</item>
+        <item>混血或中国本土犬</item>
+        <item>金毛犬</item>
+        <item>柯基犬</item>
+        <item>贵宾犬</item>
+        <item>法国斗牛犬</item>
+        <item>拉布拉多犬</item>
+        <item>柴犬</item>
+        <item>博美犬</item>
+        <item>萨摩耶犬</item>
+        <item>边境牧羊犬</item>
+        <item>德国牧羊犬</item>
+        <item>藏獒</item>
+        <item>阿拉斯加雪橇犬</item>
+        <item>雪纳瑞犬</item>
+    </string-array>
+
 </resources>

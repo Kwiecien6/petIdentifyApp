@@ -59,7 +59,8 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
     int FLAG_FLASH_ON = 0;
     Mat grayscaleImage;
     int absoluteObjSize;
-    private CascadeClassifier mCascadeClassifier;
+    private CascadeClassifier mCascadeClassifierDog;
+    private CascadeClassifier mCascadeClassifierCat;
     private CameraBridgeViewBase mOpenCvCameraView;
     private ImageView mdetectImageView;
     private Button mDetectStartBtn;
@@ -185,27 +186,51 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
                     try {
-                        InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalcatface);
-                        File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
-                        File mCascadeFile = new File(cascadeDir, "haarcascade_frontalcatface.xml");
-                        FileOutputStream os = new FileOutputStream(mCascadeFile);
+                        //导入猫模型文件
+                        InputStream isCat = getResources().openRawResource(R.raw.haarcascade_cat);
+                        File cascadeDirCat = getDir("cascade", Context.MODE_PRIVATE);
+                        File mCascadeFileCat = new File(cascadeDirCat, "haarcascade_cat.xml");
+                        FileOutputStream osCat = new FileOutputStream(mCascadeFileCat);
 
-                        byte[] buffer = new byte[1024000];
-                        int bytesRead;
-                        while ((bytesRead = is.read(buffer)) != -1) {
-                            os.write(buffer, 0, bytesRead);
+                        byte[] bufferCat = new byte[1024000];
+                        int bytesReadCat;
+                        while ((bytesReadCat = isCat.read(bufferCat)) != -1) {
+                            osCat.write(bufferCat, 0, bytesReadCat);
                         }
-                        is.close();
-                        os.close();
+                        isCat.close();
+                        osCat.close();
 
-                        mCascadeClassifier = new CascadeClassifier(mCascadeFile.getAbsolutePath());
-                        if (mCascadeClassifier.empty()) {
+                        //导入狗模型文件
+                        InputStream isDog = getResources().openRawResource(R.raw.haarcascade_dog2);
+                        File cascadeDirDog = getDir("cascade", Context.MODE_PRIVATE);
+                        File mCascadeFileDog = new File(cascadeDirDog, "haarcascade_dog2.xml");
+                        FileOutputStream osDog = new FileOutputStream(mCascadeFileDog);
+
+                        byte[] bufferDog = new byte[1024000];
+                        int bytesReadDog;
+                        while ((bytesReadDog = isDog.read(bufferDog)) != -1) {
+                            osDog.write(bufferDog, 0, bytesReadDog);
+                        }
+                        isDog.close();
+                        osDog.close();
+
+                        mCascadeClassifierDog = new CascadeClassifier(mCascadeFileDog.getAbsolutePath());
+                        mCascadeClassifierCat = new CascadeClassifier(mCascadeFileCat.getAbsolutePath());
+
+                        if (mCascadeClassifierCat.empty()) {
                             Log.e("", "Failed to load cascade classifier");
-                            mCascadeClassifier = null;
+                            mCascadeClassifierCat = null;
                         } else
-                            Log.e("", "Loaded cascade classifier from " + mCascadeFile.getAbsolutePath());
+                            Log.e("", "Loaded cascade classifier from " + mCascadeFileCat.getAbsolutePath());
 
-                        cascadeDir.delete();
+                        if (mCascadeClassifierDog.empty()) {
+                            Log.e("", "Failed to load cascade classifier");
+                            mCascadeClassifierDog = null;
+                        } else
+                            Log.e("", "Loaded cascade classifier from " + mCascadeFileDog.getAbsolutePath());
+
+                        cascadeDirCat.delete();
+                        cascadeDirDog.delete();
                         mOpenCvCameraView.enableView();
 
                     } catch (IOException e) {
@@ -354,10 +379,17 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
             Imgproc.cvtColor(detectPhotoMat, detectPhotoMat, Imgproc.COLOR_RGBA2RGB);
 
             MatOfRect identifyObj = new MatOfRect();
-            if (mCascadeClassifier != null) {
-                mCascadeClassifier.detectMultiScale(detectPhotoMat, identifyObj, 1.1, 2, 2,
+
+            if (mCascadeClassifierCat != null) {
+                mCascadeClassifierCat.detectMultiScale(detectPhotoMat, identifyObj, 1.1, 2, 2,
                         new Size(absoluteObjSize, absoluteObjSize), new Size());
             }
+
+//            if (mCascadeClassifierDog != null) {
+//                mCascadeClassifierDog.detectMultiScale(detectPhotoMat, identifyObj, 1.1, 2, 2,
+//                        new Size(absoluteObjSize, absoluteObjSize), new Size());
+//            }
+
             Rect[] facesArray = identifyObj.toArray();
             if (facesArray.length > 0) {
                 mDetectCheckBtn.setVisibility(View.VISIBLE);
@@ -419,10 +451,15 @@ public class DetectActivity extends Activity implements CameraBridgeViewBase.CvC
             Imgproc.cvtColor(inputFrame, grayscaleImage, Imgproc.COLOR_RGBA2RGB);
             MatOfRect identifyObj = new MatOfRect();
 
-            if (mCascadeClassifier != null) {
-                mCascadeClassifier.detectMultiScale(grayscaleImage, identifyObj, 1.1, 2, 2,
+            if (mCascadeClassifierCat != null) {
+                mCascadeClassifierCat.detectMultiScale(grayscaleImage, identifyObj, 1.1, 2, 2,
                         new Size(absoluteObjSize, absoluteObjSize), new Size());
             }
+
+//            if (mCascadeClassifierDog != null) {
+//                mCascadeClassifierDog.detectMultiScale(grayscaleImage, identifyObj, 1.1, 2, 2,
+//                        new Size(absoluteObjSize, absoluteObjSize), new Size());
+//            }
 
             Rect[] facesArray = identifyObj.toArray();
             for (int i = 0; i < facesArray.length; i++) {

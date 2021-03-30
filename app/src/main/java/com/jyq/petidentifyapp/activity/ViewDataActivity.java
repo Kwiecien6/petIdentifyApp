@@ -6,8 +6,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,6 +36,8 @@ import com.jyq.petidentifyapp.db.DatabaseHelper;
 import com.jyq.petidentifyapp.db.PetInfo;
 import com.jyq.petidentifyapp.util.ToastUtil;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.List;
 
@@ -49,6 +55,9 @@ public class ViewDataActivity extends Activity {
     RecyclerView recyclerView;
     SearchView searchView;
     ImageView imageView;
+
+    ImageView detailPetDailyPic;
+    Bitmap petDailyPicBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,11 +158,16 @@ public class ViewDataActivity extends Activity {
                 null, false);
 
         ImageView detailPetFace = view.findViewById(R.id.detailPetFace);
+        detailPetDailyPic = view.findViewById(R.id.detailPetDailyPic);
         TextView detailPetID = view.findViewById(R.id.detailPetID);
         TextView detailPetName = view.findViewById(R.id.detailPetName);
         final EditText detailPetType = view.findViewById(R.id.detailPetType);
         final EditText detailPetSex = view.findViewById(R.id.detailPetSex);
+        final EditText detailPetSterilization = view.findViewById(R.id.detailPetSterilization);
         final EditText detailPetBirth = view.findViewById(R.id.detailPetBirth);
+        final EditText detailPetState = view.findViewById(R.id.detailPetState);
+        final EditText detailPetOwner = view.findViewById(R.id.detailPetOwner);
+        final EditText detailPetOwnerPhone = view.findViewById(R.id.detailPetOwnerPhone);
         final EditText detailPetInfo = view.findViewById(R.id.detailPetInfo);
         TextView detailPetRegistLocation = view.findViewById(R.id.detailPetRegistLocation);
         final TextView detailPetHistLocation = view.findViewById(R.id.detailPetHistLocation);
@@ -169,11 +183,17 @@ public class ViewDataActivity extends Activity {
         popWindow.setAnimationStyle(R.style.PopupAnimation);  //设置加载动画
 
         detailPetFace.setImageBitmap(BitmapFactory.decodeFile(pet.getPetPicPath()));
-        detailPetID.setText(pet.getPetID().toString());
+        detailPetDailyPic.setImageBitmap(BitmapFactory.decodeFile(pet.getPetDailyPicPath()));
+        petDailyPicBitmap = BitmapFactory.decodeFile(pet.getPetDailyPicPath());
+        detailPetID.setText(pet.getPetID());
         detailPetName.setText(pet.getPetName());
         detailPetType.setText(pet.getPetType());
         detailPetSex.setText(pet.getPetSex());
+        detailPetSterilization.setText(pet.getPetSterilization());
         detailPetBirth.setText(dateToStr(pet.getPetBirth()));
+        detailPetState.setText(pet.getPetState());
+        detailPetOwner.setText(pet.getPetOwner());
+        detailPetOwnerPhone.setText(pet.getPetOwnerPhone());
         detailPetRegistLocation.setText(pet.getPetRegistLocation());
         detailPetHistLocation.setText(pet.getPetHistLocation());
         detailPetInfo.setText(pet.getPetInfo());
@@ -222,14 +242,23 @@ public class ViewDataActivity extends Activity {
         detailUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseHelper updateHelper = new DatabaseHelper(ViewDataActivity.this);
+
                 pet.setPetType(detailPetType.getText().toString());
                 pet.setPetSex(detailPetSex.getText().toString());
+                pet.setPetSterilization(detailPetSterilization.getText().toString());
                 pet.setPetBirth(strToDate(detailPetBirth.getText().toString()));
+                pet.setPetState(detailPetState.getText().toString());
+                pet.setPetOwner(detailPetOwner.getText().toString());
+                pet.setPetOwnerPhone(detailPetOwnerPhone.getText().toString());
                 pet.setPetHistLocation(detailPetHistLocation.getText().toString());
+
+                String petDailyPicPath = updateHelper.saveBitmapToLocal(petDailyPicBitmap, pet.getPetID() + "dailypic");
+                pet.setPetDailyPicPath(petDailyPicPath);
+
                 pet.setPetInfo(detailPetInfo.getText().toString());
                 pet.setPetUpdateTime(getNowDate());
 
-                DatabaseHelper updateHelper = new DatabaseHelper(ViewDataActivity.this);
                 updateHelper.updatePet(pet);
                 updateHelper.close();
 
@@ -254,6 +283,17 @@ public class ViewDataActivity extends Activity {
             }
         });
 
+
+        detailPetType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    String[] list =getResources().getStringArray(R.array.pet_type);
+                    showListPopupWindow(list, detailPetType);
+                }
+            }
+        });
+
         detailPetSex.setInputType(InputType.TYPE_NULL);
         detailPetSex.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -265,8 +305,64 @@ public class ViewDataActivity extends Activity {
             }
         });
 
+        detailPetSterilization.setInputType(InputType.TYPE_NULL);
+        detailPetSterilization.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    String[] list = {"已绝育", "未绝育"};//要填充的数据
+                    showListPopupWindow(list, detailPetSterilization);
+                }
+            }
+        });
+
+        detailPetState.setInputType(InputType.TYPE_NULL);
+        detailPetState.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    String[] list = {"正常", "走失"};//要填充的数据
+                    showListPopupWindow(list, detailPetState);
+                }
+            }
+        });
+
+        detailPetDailyPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //读取相册图片
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 1);
+            }
+        });
+
     }
 
+
+    //相册Intent回调
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //获取图片路径
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            String petDailyPicPath = c.getString(columnIndex);
+            c.close();
+
+            petDailyPicBitmap = BitmapFactory.decodeFile(petDailyPicPath);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            petDailyPicBitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+            petDailyPicBitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(baos.toByteArray()), null, null);
+            detailPetDailyPic.setImageBitmap(petDailyPicBitmap);
+        }
+    }
 
     /**
      * 改变背景颜色

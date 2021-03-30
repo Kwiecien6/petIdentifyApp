@@ -63,17 +63,24 @@ public class MatcherActivity extends AppCompatActivity {
 
         ImageView matcherPetFace = findViewById(R.id.matcherPetFace);
         ImageView matcherFeaturesPetFace = findViewById(R.id.matcherFeaturesPetFace);
+        ImageView matcherPetDailyPic = findViewById(R.id.matcherPetDailyPic);
+        final ImageView matcherPetLostWarningPic = findViewById(R.id.matcherPetLostWarning);
         TextView matcherPetID = findViewById(R.id.matcherPetID);
         TextView matcherPetName = findViewById(R.id.matcherPetName);
         final EditText matcherPetType = findViewById(R.id.matcherPetType);
         final EditText matcherPetSex = findViewById(R.id.matcherPetSex);
+        final EditText matcherPetSterilization = findViewById(R.id.matcherPetSterilization);
         final EditText matcherPetBirth = findViewById(R.id.matcherPetBirth);
+        final EditText matcherPetState = findViewById(R.id.matcherPetState);
+        final EditText matcherPetOwner = findViewById(R.id.matcherPetOwner);
+        final EditText matcherPetOwnerPhone = findViewById(R.id.matcherPetOwnerPhone);
         final EditText matcherPetInfo = findViewById(R.id.matcherPetInfo);
         TextView matcherPetRegistLocation = findViewById(R.id.matcherPetRegistLocation);
         final TextView matcherPetHistLocation = findViewById(R.id.matcherPetHistLocation);
         final TextView matcherPetNowLocation = findViewById(R.id.matcherPetNowLocation);
         TextView matcherPetRegistTime = findViewById(R.id.matcherPetRegistTime);
         final TextView matcherPetUpdateTime = findViewById(R.id.matcherPetUpdateTime);
+
         Button matcherUpdateBtn = findViewById(R.id.matcherUpdateBtn);
         Button matcherFunctionBtn = findViewById(R.id.matcherFunctionBtn);
 
@@ -82,11 +89,17 @@ public class MatcherActivity extends AppCompatActivity {
 
         matcherFeaturesPetFace.setImageBitmap(drawMatches(petFace2Match,petFaceMatcher));
 
+        matcherPetDailyPic.setImageBitmap(BitmapFactory.decodeFile(matcherPet.getPetDailyPicPath()));
+
         matcherPetID.setText(matcherPet.getPetID().toString());
         matcherPetName.setText(matcherPet.getPetName());
         matcherPetType.setText(matcherPet.getPetType());
         matcherPetSex.setText(matcherPet.getPetSex());
+        matcherPetSterilization.setText(matcherPet.getPetSterilization());
         matcherPetBirth.setText(dateToStr(matcherPet.getPetBirth()));
+        matcherPetState.setText(matcherPet.getPetState());
+        matcherPetOwner.setText(matcherPet.getPetOwner());
+        matcherPetOwnerPhone.setText(matcherPet.getPetOwnerPhone());
         matcherPetRegistLocation.setText(matcherPet.getPetRegistLocation());
         matcherPetHistLocation.setText(matcherPet.getPetHistLocation());
         matcherPetNowLocation.setText(LocationUtil.getLocationAddress(LocationUtil.getMyLocation(MatcherActivity.this),MatcherActivity.this));
@@ -94,6 +107,9 @@ public class MatcherActivity extends AppCompatActivity {
         matcherPetRegistTime.setText(dateToStrLong(matcherPet.getPetRegistTime()));
         matcherPetUpdateTime.setText(dateToStrLong(matcherPet.getPetUpdateTime()));
 
+        if(matcherPetState.getText().toString().equals("走失")){
+            matcherPetLostWarningPic.setVisibility(View.VISIBLE);
+        }else  matcherPetLostWarningPic.setVisibility(View.INVISIBLE);
 
         matcherFunctionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +130,11 @@ public class MatcherActivity extends AppCompatActivity {
             public void onClick(View v) {
                 matcherPet.setPetType(matcherPetType.getText().toString());
                 matcherPet.setPetSex(matcherPetSex.getText().toString());
+                matcherPet.setPetSterilization(matcherPetSterilization.getText().toString());
                 matcherPet.setPetBirth(strToDate(matcherPetBirth.getText().toString()));
+                matcherPet.setPetState(matcherPetState.getText().toString());
+                matcherPet.setPetOwner(matcherPetOwner.getText().toString());
+                matcherPet.setPetOwnerPhone(matcherPetOwnerPhone.getText().toString());
                 matcherPet.setPetInfo(matcherPetInfo.getText().toString());
                 matcherPet.setPetUpdateTime(getNowDate());
 
@@ -123,6 +143,10 @@ public class MatcherActivity extends AppCompatActivity {
 
                 matcherPetUpdateTime.setText(dateToStrLong(getNowDate()));
                 updateHelper2.close();
+
+                if(matcherPetState.getText().toString().equals("走失")){
+                    matcherPetLostWarningPic.setVisibility(View.VISIBLE);
+                }else  matcherPetLostWarningPic.setVisibility(View.INVISIBLE);
 
                 ToastUtil.showToast(getApplicationContext(), "宠物 " + matcherPet.getPetName() + " 已更新", 1);
             }
@@ -144,6 +168,16 @@ public class MatcherActivity extends AppCompatActivity {
             }
         });
 
+        matcherPetType.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    String[] list =getResources().getStringArray(R.array.pet_type);
+                    showListPopupWindow(list, matcherPetType);
+                }
+            }
+        });
+
         matcherPetSex.setInputType(InputType.TYPE_NULL);
         matcherPetSex.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -151,6 +185,28 @@ public class MatcherActivity extends AppCompatActivity {
                 if (hasFocus) {
                     String[] list = {"公", "母"};//要填充的数据
                     showListPopupWindow(list, matcherPetSex);
+                }
+            }
+        });
+
+        matcherPetSterilization.setInputType(InputType.TYPE_NULL);
+        matcherPetSterilization.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    String[] list = {"已绝育", "未绝育"};//要填充的数据
+                    showListPopupWindow(list, matcherPetSterilization);
+                }
+            }
+        });
+
+        matcherPetState.setInputType(InputType.TYPE_NULL);
+        matcherPetState.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    String[] list = {"正常", "走失"};//要填充的数据
+                    showListPopupWindow(list, matcherPetState);
                 }
             }
         });
